@@ -8,9 +8,18 @@ import Status from './pages/Status'
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="max-w-2xl mx-auto min-h-screen flex flex-col">
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <NavBar />
-        <main className="flex-1 px-4 py-6 pb-24 md:pt-20">
+        <main
+          className="main-content"
+          style={{
+            flex: 1,
+            maxWidth: 900,
+            width: '100%',
+            margin: '0 auto',
+            padding: '28px 16px 48px',
+          }}
+        >
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/history" element={<History />} />

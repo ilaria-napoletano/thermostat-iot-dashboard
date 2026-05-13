@@ -1,39 +1,61 @@
 import { useThermostat } from '../hooks/useThermostat'
 
-function Row({ label, value, ok }) {
-  return (
-    <div className="flex items-center justify-between py-3 border-b border-slate-700 last:border-0">
-      <span className="text-slate-400 text-sm">{label}</span>
-      <span className={`text-sm font-medium ${ok === undefined ? 'text-slate-300' : ok ? 'text-green-400' : 'text-red-400'}`}>
-        {value}
-      </span>
-    </div>
-  )
-}
-
 export default function Status() {
-  const { data, loading, error, isMock } = useThermostat()
+  const { data, error, isMock } = useThermostat()
 
-  const lastUpdate = data?.lastUpdated
-    ? new Date(data.lastUpdated).toLocaleString('it-IT')
-    : '—'
+  const rows = [
+    { label: 'Connessione Firebase', value: error ? 'Errore' : 'Connesso', ok: !error },
+    { label: 'Fonte dati', value: isMock ? 'Demo (mock)' : 'Firebase Realtime DB', ok: !isMock },
+    { label: 'Stato termostato', value: data?.isOn ? 'Acceso' : 'Spento', ok: data?.isOn },
+    { label: 'Modalità', value: data?.mode ?? '—', ok: null },
+    { label: 'Temperatura', value: data?.temperature != null ? `${data.temperature}°C` : '—', ok: null },
+    { label: 'Umidità', value: data?.humidity != null ? `${data.humidity}%` : '—', ok: null },
+    {
+      label: 'Ultimo aggiornamento',
+      value: data?.lastUpdated ? new Date(data.lastUpdated).toLocaleString('it-IT') : '—',
+      ok: null,
+    },
+  ]
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-100">Stato sistema</h1>
+    <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div>
+        <h1 style={{ fontSize: 'clamp(18px, 4vw, 22px)', fontWeight: 700, color: '#f1f5f9' }}>Stato sistema</h1>
+        <p style={{ fontSize: 13, color: '#64748b', marginTop: 2 }}>Diagnostica e connettività</p>
+      </div>
 
-      <div className="rounded-2xl bg-slate-800 border border-slate-700 p-6">
-        <Row label="Connessione" value={error ? 'Errore' : 'Connesso'} ok={!error} />
-        <Row label="Fonte dati" value={isMock ? 'Mock (demo)' : 'Firebase'} ok={!isMock} />
-        <Row label="Ultimo aggiornamento" value={lastUpdate} />
-        <Row label="Stato termostato" value={data?.isOn ? 'Acceso' : 'Spento'} ok={data?.isOn} />
-        <Row label="Modalità" value={data?.mode ?? '—'} />
-        <Row label="Temperatura" value={data?.temperature != null ? `${data.temperature}°C` : '—'} />
-        <Row label="Umidità" value={data?.humidity != null ? `${data.humidity}%` : '—'} />
+      <div style={{
+        background: 'rgba(15, 25, 50, 0.7)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(99, 179, 237, 0.12)',
+        borderRadius: 16, overflow: 'hidden',
+      }}>
+        {rows.map(({ label, value, ok }, i) => (
+          <div key={label} style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            padding: '15px 20px',
+            borderBottom: i < rows.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+            gap: 12,
+          }}>
+            <span style={{ fontSize: 14, color: '#64748b', flexShrink: 0 }}>{label}</span>
+            <span style={{
+              fontSize: 14, fontWeight: 600, textAlign: 'right',
+              color: ok === null ? '#94a3b8' : ok ? '#22c55e' : '#f87171',
+            }}>
+              {ok !== null && (
+                <span style={{ marginRight: 5, fontSize: 8 }}>●</span>
+              )}
+              {value}
+            </span>
+          </div>
+        ))}
       </div>
 
       {error && (
-        <div className="rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 p-4 text-sm">
+        <div style={{
+          background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
+          borderRadius: 12, padding: '14px 20px', color: '#f87171', fontSize: 13,
+        }}>
           {error}
         </div>
       )}
