@@ -40,12 +40,25 @@ export function useThermostat() {
       try {
         const { ref, onValue } = await import('firebase/database')
         const db = await getDb()
-        const thermostatRef = ref(db, 'thermostat')
+        // Cambiato da 'thermostat' a 'termostato1'
+        const thermostatRef = ref(db, 'termostato1')
         unsubscribe = onValue(
           thermostatRef,
           snapshot => {
             const val = snapshot.val()
-            if (val) setData({ ...val, lastUpdated: Date.now() })
+            if (val) {
+              // Mappatura della struttura dati dell'ESP a quella della dashboard
+              setData({
+                temperature: val.stato?.temperatura ?? null,
+                humidity: val.stato?.umidita ?? null,
+                target: val.config?.soglia ?? null,
+                isOn: val.stato?.wifi_ok ?? true,
+                mode: val.stato?.uscita === 1 ? 'heating' : 'idle',
+                lastUpdated: val.stato?.timestamp 
+                  ? new Date(val.stato.timestamp).getTime() 
+                  : Date.now()
+              })
+            }
             setLoading(false)
           },
           err => {
