@@ -13,9 +13,27 @@ export default function Settings() {
   const [target, setTarget] = useState(data?.target ?? 21)
   const [saved, setSaved] = useState(false)
 
-  function handleSave() {
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+  async function handleSave() {
+    if (isMock) {
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+      return
+    }
+
+    try {
+      const { ref, set } = await import('firebase/database')
+      const { db } = await import('../firebase/config')
+      
+      // Salviamo la nuova soglia nel nodo giusto di Firebase
+      const targetRef = ref(db, 'termostato1/config/soglia')
+      await set(targetRef, target)
+      
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } catch (err) {
+      console.error('Errore durante il salvataggio:', err)
+      alert('Si è verificato un errore durante il salvataggio su Firebase.')
+    }
   }
 
   return (
