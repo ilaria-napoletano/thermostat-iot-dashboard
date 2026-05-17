@@ -72,6 +72,23 @@ Genera la cartella `dist/` pronta per essere caricata su qualsiasi hosting stati
 
 ---
 
+## Aggiornamento Meteo Automatico (GitHub Actions)
+
+Il progetto include uno script (`meteo-firebase/fetch_data.js`) che scarica il meteo di Bari (via open-meteo) e lo salva su Firestore.
+È stato configurato un workflow GitHub Actions (`.github/workflows/meteo-cron.yml`) che esegue questo script **automaticamente ogni ora**, in modo totalmente gratuito.
+
+**Per farlo funzionare su GitHub:**
+1. Vai nel tuo repository su GitHub.
+2. Clicca su **Settings** > **Secrets and variables** > **Actions**.
+3. Clicca su **New repository secret**.
+4. Nome: `FIREBASE_SERVICE_ACCOUNT`
+5. Valore: Incolla l'intero contenuto del tuo file `serviceAccountKey.json`.
+6. Clicca **Add secret**.
+
+Il file `serviceAccountKey.json` locale viene ignorato automaticamente per ragioni di sicurezza e non verrà mai caricato pubblicamente.
+
+---
+
 ## Note
 
 - Il file `.env` contiene le credenziali Firebase e **non va mai condiviso o caricato su GitHub**

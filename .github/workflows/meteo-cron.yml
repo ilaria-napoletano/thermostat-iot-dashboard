@@ -1,0 +1,32 @@
+name: Aggiornamento Meteo Bari
+on:
+  schedule:
+    - cron: '0 * * * *' # Esegue ogni ora al minuto 0
+  workflow_dispatch: # Permette l'esecuzione manuale dal sito GitHub
+
+jobs:
+  fetch_meteo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: ./meteo-firebase
+        run: npm ci
+
+      - name: Create Service Account Key
+        working-directory: ./meteo-firebase
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > serviceAccountKey.json
+
+      - name: Run Fetch Data Script
+        working-directory: ./meteo-firebase
+        run: node fetch_data.js
