@@ -74,29 +74,43 @@ export function useMeteo() {
         const docRef = doc(db, 'thermostat_data', 'current_state')
         
         unsubscribe = onSnapshot(docRef, (docSnap) => {
-          if (docSnap.exists()) {
-            const val = docSnap.data()
-            
-            setData({
-              temperature: val.current_temperature ?? null,
-              humidity: val.current_humidity ?? null,
-              lastUpdated: val.last_update ? val.last_update.toMillis() : Date.now()
-            })
-
-            // Format history for Recharts
-            if (val.history_24h && val.history_24h.times) {
-              const formattedHistory = val.history_24h.times.map((timeStr, index) => {
-                const timeObj = new Date(timeStr)
-                return {
-                  time: `${timeObj.getHours().toString().padStart(2, '0')}:00`,
-                  temperature: val.history_24h.temperatures[index],
-                  humidity: val.history_24h.humidities[index],
-                }
+          try {
+            if (docSnap.exists()) {
+              const val = docSnap.data()
+              
+              let lastUpdatedMs = Date.now()
+              if (val.last_update) {
+                lastUpdatedMs = typeof val.last_update.toMillis === 'function' 
+                  ? val.last_update.toMillis() 
+                  : (val.last_update.seconds ? val.last_update.seconds * 1000 : Date.now())
+              }
+              
+              setData({
+                temperature: val.current_temperature ?? null,
+                humidity: val.current_humidity ?? null,
+                lastUpdated: lastUpdatedMs
               })
-              setHistory(formattedHistory)
+
+              // Format history for Recharts
+              if (val.history_24h && val.history_24h.times) {
+                const formattedHistory = val.history_24h.times.map((timeStr, index) => {
+                  const timeObj = new Date(timeStr)
+                  return {
+                    time: `${timeObj.getHours().toString().padStart(2, '0')}:00`,
+                    temperature: val.history_24h.temperatures[index],
+                    humidity: val.history_24h.humidities[index],
+                  }
+                })
+                setHistory(formattedHistory)
+              }
+            } else {
+              setError("Il documento 'current_state' non esiste nel database.")
             }
+          } catch (e) {
+            setError("Errore di elaborazione dati: " + e.message)
+          } finally {
+            setLoading(false)
           }
-          setLoading(false)
         }, (err) => {
           setError(err.message)
           setLoading(false)
