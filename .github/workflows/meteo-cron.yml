@@ -1,7 +1,7 @@
 name: Aggiornamento Meteo Bari
 on:
   schedule:
-    - cron: '0 * * * *' # Esegue ogni ora al minuto 0
+    - cron: '*/30 * * * *' # Esegue ogni 30 minuti
   workflow_dispatch: # Permette l'esecuzione manuale dal sito GitHub
 
 jobs:
