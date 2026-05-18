@@ -66,16 +66,16 @@ export default function Dashboard() {
         </div>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 7,
-          background: isOn ? 'rgba(34,197,94,0.1)' : 'rgba(100,116,139,0.1)',
-          border: `1px solid ${isOn ? 'rgba(34,197,94,0.3)' : 'rgba(100,116,139,0.2)'}`,
+          background: isOn ? 'rgba(34,197,94,0.15)' : 'rgba(100,116,139,0.1)',
+          border: `1px solid ${isOn ? 'rgba(34,197,94,0.4)' : 'rgba(100,116,139,0.2)'}`,
           borderRadius: 100, padding: '6px 12px',
         }}>
           <span className={isOn ? 'live-dot' : ''} style={{
             width: 7, height: 7, borderRadius: '50%',
-            background: isOn ? '#22c55e' : '#475569',
+            background: isOn ? '#15803d' : '#475569',
             display: 'block', flexShrink: 0,
           }} />
-          <span style={{ fontSize: 13, fontWeight: 600, color: isOn ? '#16a34a' : '#475569' }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: isOn ? '#15803d' : '#475569' }}>
             {isOn ? 'Online' : 'Offline'}
           </span>
         </div>

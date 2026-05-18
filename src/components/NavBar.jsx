@@ -12,13 +12,11 @@ export default function NavBar() {
     <>
       {/* Desktop top navbar */}
       <header className="desktop-nav" style={{
-        background: 'rgba(255, 255, 255, 0.65)',
-        backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
+        background: 'transparent',
+        borderBottom: 'none',
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        boxShadow: '0 4px 20px rgba(0,0,0,0.02)'
       }}>
         <div style={{
           maxWidth: 900,
@@ -32,12 +30,12 @@ export default function NavBar() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
               width: 32, height: 32,
-              background: 'linear-gradient(135deg, #3b82f6, #0284c7)',
+              background: 'rgba(255,255,255,0.2)',
               borderRadius: 8,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 16, color: '#fff'
             }}>🌡</div>
-            <span style={{ fontWeight: 700, fontSize: 16, color: '#0f172a', letterSpacing: '-0.3px' }}>
+            <span style={{ fontWeight: 700, fontSize: 18, color: '#ffffff', letterSpacing: '-0.3px' }}>
               ThermoIoT
             </span>
           </div>
@@ -55,9 +53,8 @@ export default function NavBar() {
                   fontWeight: 600,
                   textDecoration: 'none',
                   transition: 'all 0.2s',
-                  background: isActive ? 'rgba(2, 132, 199, 0.1)' : 'transparent',
-                  color: isActive ? '#0284c7' : '#64748b',
-                  border: isActive ? '1px solid rgba(2, 132, 199, 0.2)' : '1px solid transparent',
+                  background: isActive ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+                  color: isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.7)',
                 })}
               >
                 {label}
