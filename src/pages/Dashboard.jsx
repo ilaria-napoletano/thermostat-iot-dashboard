@@ -9,7 +9,7 @@ const modeInfo = {
 
 export default function Dashboard() {
   const { data, loading, error, isMock } = useThermostat()
-  const { data: meteoData, loading: meteoLoading } = useMeteo()
+  const { data: meteoData, loading: meteoLoading, error: meteoError } = useMeteo()
 
   if (loading) return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 300 }}>
@@ -147,6 +147,15 @@ export default function Dashboard() {
           accent="#38bdf8" 
         />
       </div>
+
+      {meteoError && (
+        <div style={{
+          background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
+          borderRadius: 12, padding: '12px 16px', color: '#f87171', fontSize: 13, textAlign: 'center'
+        }}>
+          Errore Meteo: {meteoError}
+        </div>
+      )}
 
       {data?.lastUpdated && (
         <p style={{ textAlign: 'center', fontSize: 12, color: '#334155' }}>
