@@ -20,27 +20,28 @@ export default function Status() {
   return (
     <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div>
-        <h1 style={{ fontSize: 'clamp(18px, 4vw, 22px)', fontWeight: 700, color: '#f1f5f9' }}>Stato sistema</h1>
-        <p style={{ fontSize: 13, color: '#64748b', marginTop: 2 }}>Diagnostica e connettività</p>
+        <h1 style={{ fontSize: 'clamp(18px, 4vw, 22px)', fontWeight: 700, color: '#1e293b' }}>Stato sistema</h1>
+        <p style={{ fontSize: 13, color: '#475569', marginTop: 2 }}>Diagnostica e connettività</p>
       </div>
 
       <div style={{
-        background: 'rgba(15, 25, 50, 0.7)',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(99, 179, 237, 0.12)',
-        borderRadius: 16, overflow: 'hidden',
+        background: 'rgba(255, 255, 255, 0.65)',
+        backdropFilter: 'blur(16px)',
+        border: '1px solid rgba(255, 255, 255, 0.8)',
+        boxShadow: '0 8px 32px rgba(15, 23, 42, 0.04)',
+        borderRadius: 20, overflow: 'hidden',
       }}>
         {rows.map(({ label, value, ok }, i) => (
           <div key={label} style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             padding: '15px 20px',
-            borderBottom: i < rows.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+            borderBottom: i < rows.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none',
             gap: 12,
           }}>
-            <span style={{ fontSize: 14, color: '#64748b', flexShrink: 0 }}>{label}</span>
+            <span style={{ fontSize: 14, color: '#475569', flexShrink: 0 }}>{label}</span>
             <span style={{
               fontSize: 14, fontWeight: 600, textAlign: 'right',
-              color: ok === null ? '#94a3b8' : ok ? '#22c55e' : '#f87171',
+              color: ok === null ? '#64748b' : ok ? '#16a34a' : '#ef4444',
             }}>
               {ok !== null && (
                 <span style={{ marginRight: 5, fontSize: 8 }}>●</span>
@@ -54,7 +55,7 @@ export default function Status() {
       {error && (
         <div style={{
           background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
-          borderRadius: 12, padding: '14px 20px', color: '#f87171', fontSize: 13,
+          borderRadius: 12, padding: '14px 20px', color: '#ef4444', fontSize: 13,
         }}>
           {error}
         </div>

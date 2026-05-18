@@ -12,12 +12,13 @@ export default function NavBar() {
     <>
       {/* Desktop top navbar */}
       <header className="desktop-nav" style={{
-        background: 'rgba(10, 15, 30, 0.95)',
+        background: 'rgba(255, 255, 255, 0.65)',
         backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(99, 179, 237, 0.1)',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
+        boxShadow: '0 4px 20px rgba(0,0,0,0.02)'
       }}>
         <div style={{
           maxWidth: 900,
@@ -31,12 +32,12 @@ export default function NavBar() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
               width: 32, height: 32,
-              background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+              background: 'linear-gradient(135deg, #3b82f6, #0284c7)',
               borderRadius: 8,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 16,
+              fontSize: 16, color: '#fff'
             }}>🌡</div>
-            <span style={{ fontWeight: 700, fontSize: 16, color: '#f1f5f9', letterSpacing: '-0.3px' }}>
+            <span style={{ fontWeight: 700, fontSize: 16, color: '#0f172a', letterSpacing: '-0.3px' }}>
               ThermoIoT
             </span>
           </div>
@@ -51,12 +52,12 @@ export default function NavBar() {
                   padding: '6px 16px',
                   borderRadius: 8,
                   fontSize: 14,
-                  fontWeight: 500,
+                  fontWeight: 600,
                   textDecoration: 'none',
                   transition: 'all 0.2s',
-                  background: isActive ? 'rgba(59, 130, 246, 0.15)' : 'transparent',
-                  color: isActive ? '#60a5fa' : '#94a3b8',
-                  border: isActive ? '1px solid rgba(59, 130, 246, 0.3)' : '1px solid transparent',
+                  background: isActive ? 'rgba(2, 132, 199, 0.1)' : 'transparent',
+                  color: isActive ? '#0284c7' : '#64748b',
+                  border: isActive ? '1px solid rgba(2, 132, 199, 0.2)' : '1px solid transparent',
                 })}
               >
                 {label}
@@ -71,14 +72,15 @@ export default function NavBar() {
         position: 'fixed',
         bottom: 0, left: 0, right: 0,
         zIndex: 100,
-        background: 'rgba(8, 12, 28, 0.97)',
+        background: 'rgba(255, 255, 255, 0.85)',
         backdropFilter: 'blur(20px)',
-        borderTop: '1px solid rgba(99, 179, 237, 0.12)',
+        borderTop: '1px solid rgba(0, 0, 0, 0.05)',
         display: 'none',
         justifyContent: 'space-around',
         alignItems: 'center',
         height: 68,
         paddingBottom: 'env(safe-area-inset-bottom)',
+        boxShadow: '0 -4px 20px rgba(0,0,0,0.03)'
       }}>
         {links.map(({ to, label, icon }) => (
           <NavLink
@@ -92,7 +94,7 @@ export default function NavBar() {
               gap: 4,
               padding: '8px 16px',
               textDecoration: 'none',
-              color: isActive ? '#60a5fa' : '#475569',
+              color: isActive ? '#0284c7' : '#94a3b8',
               transition: 'color 0.2s',
               flex: 1,
             })}
@@ -102,7 +104,7 @@ export default function NavBar() {
                 <span style={{ fontSize: 20, lineHeight: 1 }}>{icon}</span>
                 <span style={{
                   fontSize: 10, fontWeight: 600, letterSpacing: '0.04em',
-                  color: isActive ? '#60a5fa' : '#475569',
+                  color: isActive ? '#0284c7' : '#94a3b8',
                 }}>
                   {label}
                 </span>
@@ -111,7 +113,7 @@ export default function NavBar() {
                     position: 'absolute',
                     bottom: 0,
                     width: 20, height: 2,
-                    background: '#3b82f6',
+                    background: '#0284c7',
                     borderRadius: 2,
                   }} />
                 )}

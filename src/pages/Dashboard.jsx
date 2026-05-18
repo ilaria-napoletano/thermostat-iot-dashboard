@@ -59,10 +59,10 @@ export default function Dashboard() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: 'clamp(18px, 4vw, 22px)', fontWeight: 700, color: '#f1f5f9' }}>
+          <h1 style={{ fontSize: 'clamp(18px, 4vw, 22px)', fontWeight: 700, color: '#1e293b' }}>
             Dashboard
           </h1>
-          <p style={{ fontSize: 13, color: '#64748b', marginTop: 2 }}>Monitoraggio in tempo reale</p>
+          <p style={{ fontSize: 13, color: '#475569', marginTop: 2 }}>Monitoraggio in tempo reale</p>
         </div>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 7,
@@ -75,7 +75,7 @@ export default function Dashboard() {
             background: isOn ? '#22c55e' : '#475569',
             display: 'block', flexShrink: 0,
           }} />
-          <span style={{ fontSize: 13, fontWeight: 600, color: isOn ? '#22c55e' : '#64748b' }}>
+          <span style={{ fontSize: 13, fontWeight: 600, color: isOn ? '#16a34a' : '#475569' }}>
             {isOn ? 'Online' : 'Offline'}
           </span>
         </div>
@@ -85,11 +85,11 @@ export default function Dashboard() {
       <div className="glass glow-blue" style={{
         padding: 'clamp(24px, 6vw, 44px) clamp(20px, 5vw, 36px)',
         textAlign: 'center',
-        background: 'linear-gradient(145deg, rgba(15,25,50,0.9), rgba(10,20,45,0.95))',
+        background: 'rgba(255, 255, 255, 0.45)', // Lighter override for hero card
       }}>
         <p style={{
-          fontSize: 11, fontWeight: 600, letterSpacing: '0.12em',
-          color: '#475569', textTransform: 'uppercase', marginBottom: 14,
+          fontSize: 11, fontWeight: 700, letterSpacing: '0.12em',
+          color: '#64748b', textTransform: 'uppercase', marginBottom: 14,
         }}>
           Temperatura attuale
         </p>
@@ -97,21 +97,21 @@ export default function Dashboard() {
         <div style={{
           fontSize: 'clamp(64px, 18vw, 88px)',
           fontWeight: 800, lineHeight: 1,
-          letterSpacing: '-3px', color: '#f1f5f9',
+          letterSpacing: '-3px', color: '#0f172a',
         }}>
           {temp !== null ? temp.toFixed(1) : '--'}
           <span style={{
             fontSize: 'clamp(26px, 7vw, 38px)',
-            fontWeight: 400, color: '#475569', marginLeft: 4,
+            fontWeight: 500, color: '#64748b', marginLeft: 4,
           }}>°C</span>
         </div>
 
         <div style={{ marginTop: 18, display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
           <span style={{
-            fontSize: 13, color: '#94a3b8',
-            background: 'rgba(255,255,255,0.04)', borderRadius: 8, padding: '6px 14px',
+            fontSize: 13, color: '#475569', fontWeight: 500,
+            background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.05)', borderRadius: 8, padding: '6px 14px',
           }}>
-            Target: <strong style={{ color: '#60a5fa' }}>{target !== null ? `${target}°C` : '--'}</strong>
+            Target: <strong style={{ color: '#0ea5e9' }}>{target !== null ? `${target}°C` : '--'}</strong>
           </span>
           <span style={{
             fontSize: 13, fontWeight: 600,
@@ -126,8 +126,8 @@ export default function Dashboard() {
 
       {/* Stats row */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-        <StatCard label="Umidità" value={humidity !== null ? `${humidity}%` : '--'} sub="Umidità relativa" icon="💧" accent="#38bdf8" />
-        <StatCard label="Target" value={target !== null ? `${target}°C` : '--'} sub="Temperatura impostata" icon="🎯" accent="#34d399" />
+        <StatCard label="Umidità" value={humidity !== null ? `${humidity}%` : '--'} sub="Umidità relativa" icon="💧" accent="#0284c7" />
+        <StatCard label="Target" value={target !== null ? `${target}°C` : '--'} sub="Temperatura impostata" icon="🎯" accent="#059669" />
       </div>
 
       {/* Meteo Row */}
@@ -137,14 +137,14 @@ export default function Dashboard() {
           value={meteoData?.temperature != null ? `${meteoData.temperature.toFixed(1)}°C` : '--'} 
           sub={meteoData?.lastUpdated ? `Aggiornato alle ${new Date(meteoData.lastUpdated).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}` : 'In attesa...'} 
           icon="🌡️" 
-          accent="#fcd34d" 
+          accent="#d97706" 
         />
         <StatCard 
           label="Umidità Bari" 
           value={meteoData?.humidity != null ? `${meteoData.humidity}%` : '--'} 
           sub={meteoData?.lastUpdated ? `Aggiornato alle ${new Date(meteoData.lastUpdated).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}` : 'In attesa...'} 
           icon="☁️" 
-          accent="#38bdf8" 
+          accent="#0284c7" 
         />
       </div>
 
