@@ -130,41 +130,23 @@ export default function Dashboard() {
         <StatCard label="Target" value={target !== null ? `${target}°C` : '--'} sub="Temperatura impostata" icon="🎯" accent="#34d399" />
       </div>
 
-      {/* Meteo Card */}
-      {!meteoLoading && meteoData && (
-        <div className="glass" style={{
-          padding: '20px',
-          background: 'linear-gradient(145deg, rgba(30,41,59,0.7), rgba(15,23,42,0.9))',
-          border: '1px solid rgba(148,163,184,0.1)'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <p style={{
-              fontSize: 11, fontWeight: 600, color: '#94a3b8',
-              textTransform: 'uppercase', letterSpacing: '0.08em',
-            }}>Meteo Esterno (Bari)</p>
-            <span style={{ fontSize: 18 }}>☁️</span>
-          </div>
-          
-          <div style={{ display: 'flex', gap: 24, alignItems: 'flex-end' }}>
-            <div>
-              <p style={{ fontSize: 28, fontWeight: 700, color: '#f8fafc', lineHeight: 1 }}>
-                {meteoData.temperature !== null ? `${meteoData.temperature.toFixed(1)}°C` : '--'}
-              </p>
-              <p style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Temperatura</p>
-            </div>
-            <div>
-              <p style={{ fontSize: 24, fontWeight: 600, color: '#38bdf8', lineHeight: 1 }}>
-                {meteoData.humidity !== null ? `${meteoData.humidity}%` : '--'}
-              </p>
-              <p style={{ fontSize: 11, color: '#64748b', marginTop: 4 }}>Umidità</p>
-            </div>
-          </div>
-          
-          <p style={{ fontSize: 10, color: '#475569', marginTop: 16, textAlign: 'right' }}>
-            Rilevazione: {new Date(meteoData.lastUpdated).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
-          </p>
-        </div>
-      )}
+      {/* Meteo Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <StatCard 
+          label="Temp. Bari" 
+          value={meteoData?.temperature != null ? `${meteoData.temperature.toFixed(1)}°C` : '--'} 
+          sub={meteoData?.lastUpdated ? `Aggiornato alle ${new Date(meteoData.lastUpdated).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}` : 'In attesa...'} 
+          icon="🌡️" 
+          accent="#fcd34d" 
+        />
+        <StatCard 
+          label="Umidità Bari" 
+          value={meteoData?.humidity != null ? `${meteoData.humidity}%` : '--'} 
+          sub={meteoData?.lastUpdated ? `Aggiornato alle ${new Date(meteoData.lastUpdated).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}` : 'In attesa...'} 
+          icon="☁️" 
+          accent="#38bdf8" 
+        />
+      </div>
 
       {data?.lastUpdated && (
         <p style={{ textAlign: 'center', fontSize: 12, color: '#334155' }}>
