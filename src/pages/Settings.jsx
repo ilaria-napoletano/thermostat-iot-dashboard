@@ -11,31 +11,7 @@ const glass = {
 
 export default function Settings() {
   const { data, isMock } = useThermostat()
-  const [target, setTarget] = useState(data?.target ?? 21)
-  const [saved, setSaved] = useState(false)
 
-  async function handleSave() {
-    if (isMock) {
-      setSaved(true)
-      setTimeout(() => setSaved(false), 2000)
-      return
-    }
-
-    try {
-      const { ref, set } = await import('firebase/database')
-      const { db } = await import('../firebase/config')
-      
-      // Salviamo la nuova soglia nel nodo giusto di Firebase
-      const targetRef = ref(db, 'termostato1/config/soglia')
-      await set(targetRef, target)
-      
-      setSaved(true)
-      setTimeout(() => setSaved(false), 2000)
-    } catch (err) {
-      console.error('Errore durante il salvataggio:', err)
-      alert('Si è verificato un errore durante il salvataggio su Firebase.')
-    }
-  }
 
   return (
     <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -53,63 +29,6 @@ export default function Settings() {
         </div>
       )}
 
-      <div style={{ ...glass, padding: 24 }}>
-        <label style={{
-          fontSize: 11, fontWeight: 700, color: '#64748b',
-          textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 20,
-        }}>
-          Temperatura target
-        </label>
-
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginBottom: 20,
-        }}>
-          <span style={{
-            fontSize: 'clamp(48px, 14vw, 64px)',
-            fontWeight: 800, color: '#0ea5e9', lineHeight: 1, letterSpacing: '-2px',
-          }}>
-            {target}
-            <span style={{ fontSize: '40%', color: '#64748b', fontWeight: 500 }}>°C</span>
-          </span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <button
-            onClick={() => setTarget(t => Math.max(10, +(t - 0.5).toFixed(1)))}
-            style={btnStyle}
-          >−</button>
-          <input
-            type="range" min={10} max={30} step={0.5}
-            value={target}
-            onChange={e => setTarget(Number(e.target.value))}
-            style={{ flex: 1, accentColor: '#0284c7', height: 6, cursor: 'pointer' }}
-          />
-          <button
-            onClick={() => setTarget(t => Math.min(30, +(t + 0.5).toFixed(1)))}
-            style={btnStyle}
-          >+</button>
-        </div>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
-          <span style={{ fontSize: 11, color: '#64748b' }}>10°C</span>
-          <span style={{ fontSize: 11, color: '#64748b' }}>30°C</span>
-        </div>
-
-        <button
-          onClick={handleSave}
-          style={{
-            width: '100%', marginTop: 24, padding: 14,
-            borderRadius: 12, fontWeight: 700, fontSize: 15,
-            cursor: 'pointer', border: 'none', transition: 'all 0.2s',
-            background: saved ? 'rgba(34,197,94,0.15)' : 'linear-gradient(135deg, #0ea5e9, #0284c7)',
-            color: saved ? '#16a34a' : '#fff',
-            boxShadow: saved ? 'none' : '0 4px 14px rgba(2, 132, 199, 0.25)',
-          }}
-        >
-          {saved ? '✓ Salvato' : 'Salva impostazioni'}
-        </button>
-      </div>
 
       <div style={{ ...glass, padding: 24 }}>
         <p style={{
@@ -136,12 +55,3 @@ export default function Settings() {
   )
 }
 
-const btnStyle = {
-  width: 40, height: 40, borderRadius: 10,
-  background: 'rgba(255,255,255,0.8)',
-  border: '1px solid rgba(0,0,0,0.05)',
-  color: '#475569', fontSize: 20, fontWeight: 300,
-  cursor: 'pointer', flexShrink: 0,
-  display: 'flex', alignItems: 'center', justifyContent: 'center',
-  boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
-}

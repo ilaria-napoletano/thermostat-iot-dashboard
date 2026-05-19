@@ -4,7 +4,6 @@ const links = [
   { to: '/', label: 'Dashboard', icon: '⊞' },
   { to: '/history', label: 'Storico', icon: '↗' },
   { to: '/settings', label: 'Impostazioni', icon: '⚙' },
-  { to: '/status', label: 'Stato', icon: '◉' },
 ]
 
 export default function NavBar() {

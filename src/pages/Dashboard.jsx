@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { useThermostat } from '../hooks/useThermostat'
 import { useMeteo } from '../hooks/useMeteo'
 
@@ -10,6 +11,18 @@ const modeInfo = {
 export default function Dashboard() {
   const { data, loading, error, isMock } = useThermostat()
   const { data: meteoData, loading: meteoLoading, error: meteoError } = useMeteo()
+
+  const handleTargetRelease = useCallback(async (newTarget) => {
+    if (isMock) return;
+    try {
+      const { ref, set } = await import('firebase/database');
+      const { db } = await import('../firebase/config');
+      const targetRef = ref(db, 'termostato1/config/soglia');
+      await set(targetRef, newTarget);
+    } catch (err) {
+      console.error('Errore durante il salvataggio:', err);
+    }
+  }, [isMock]);
 
   if (loading) return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 300 }}>
@@ -39,7 +52,6 @@ export default function Dashboard() {
   const temp = data?.temperature ?? null
   const humidity = data?.humidity ?? null
   const target = data?.target ?? null
-  const isOn = data?.isOn ?? false
   const mode = data?.mode ?? 'idle'
   const currentMode = modeInfo[mode] ?? modeInfo.idle
 
@@ -64,70 +76,19 @@ export default function Dashboard() {
           </h1>
           <p style={{ fontSize: 13, color: '#475569', marginTop: 2 }}>Monitoraggio in tempo reale</p>
         </div>
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 7,
-          background: isOn ? 'rgba(34,197,94,0.15)' : 'rgba(100,116,139,0.1)',
-          border: `1px solid ${isOn ? 'rgba(34,197,94,0.4)' : 'rgba(100,116,139,0.2)'}`,
-          borderRadius: 100, padding: '6px 12px',
-        }}>
-          <span className={isOn ? 'live-dot' : ''} style={{
-            width: 7, height: 7, borderRadius: '50%',
-            background: isOn ? '#15803d' : '#475569',
-            display: 'block', flexShrink: 0,
-          }} />
-          <span style={{ fontSize: 13, fontWeight: 700, color: isOn ? '#15803d' : '#475569' }}>
-            {isOn ? 'Online' : 'Offline'}
-          </span>
-        </div>
       </div>
 
-      {/* Main temperature card */}
-      <div className="glass glow-blue" style={{
-        padding: 'clamp(24px, 6vw, 44px) clamp(20px, 5vw, 36px)',
-        textAlign: 'center',
-        background: 'rgba(255, 255, 255, 0.45)', // Lighter override for hero card
-      }}>
-        <p style={{
-          fontSize: 11, fontWeight: 700, letterSpacing: '0.12em',
-          color: '#64748b', textTransform: 'uppercase', marginBottom: 14,
-        }}>
-          Temperatura attuale
-        </p>
-
-        <div style={{
-          fontSize: 'clamp(64px, 18vw, 88px)',
-          fontWeight: 800, lineHeight: 1,
-          letterSpacing: '-3px', color: '#0f172a',
-        }}>
-          {temp !== null ? temp.toFixed(1) : '--'}
-          <span style={{
-            fontSize: 'clamp(26px, 7vw, 38px)',
-            fontWeight: 500, color: '#64748b', marginLeft: 4,
-          }}>°C</span>
-        </div>
-
-        <div style={{ marginTop: 18, display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <span style={{
-            fontSize: 13, color: '#475569', fontWeight: 500,
-            background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.05)', borderRadius: 8, padding: '6px 14px',
-          }}>
-            Target: <strong style={{ color: '#0ea5e9' }}>{target !== null ? `${target}°C` : '--'}</strong>
-          </span>
-          <span style={{
-            fontSize: 13, fontWeight: 600,
-            background: currentMode.bg,
-            border: `1px solid ${currentMode.border}`,
-            color: currentMode.color, borderRadius: 8, padding: '6px 14px',
-          }}>
-            {currentMode.label}
-          </span>
-        </div>
-      </div>
+      {/* Circular Slider Area */}
+      <CircularSlider 
+        currentTemp={temp} 
+        initialTarget={target} 
+        onTargetRelease={handleTargetRelease}
+        currentMode={currentMode}
+      />
 
       {/* Stats row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12 }}>
         <StatCard label="Umidità" value={humidity !== null ? `${humidity}%` : '--'} sub="Umidità relativa" icon="💧" accent="#0284c7" />
-        <StatCard label="Target" value={target !== null ? `${target}°C` : '--'} sub="Temperatura impostata" icon="🎯" accent="#059669" />
       </div>
 
       {/* Meteo Row */}
@@ -164,7 +125,161 @@ export default function Dashboard() {
       )}
     </div>
   )
+}
 
+function CircularSlider({ currentTemp, initialTarget, onTargetRelease, currentMode }) {
+  const [target, setTarget] = useState(initialTarget || 21);
+  const svgRef = useRef(null);
+
+  useEffect(() => {
+    if (initialTarget !== null && initialTarget !== undefined) {
+      setTarget(initialTarget);
+    }
+  }, [initialTarget]);
+
+  const min = 10;
+  const max = 30;
+
+  const calculateValue = (clientX, clientY) => {
+    if (!svgRef.current) return target;
+    const rect = svgRef.current.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = clientX - cx;
+    const dy = clientY - cy;
+
+    let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+    angle = (angle + 360) % 360;
+
+    let shiftedAngle = angle;
+    if (shiftedAngle < 90) shiftedAngle += 360; 
+    
+    if (shiftedAngle < 135) shiftedAngle = 135;
+    if (shiftedAngle > 405) shiftedAngle = 405;
+    
+    const percentage = (shiftedAngle - 135) / 270;
+    const val = min + (max - min) * percentage;
+    return Math.round(val * 2) / 2;
+  };
+
+  const handlePointerDown = (e) => {
+    e.target.setPointerCapture(e.pointerId);
+    const newVal = calculateValue(e.clientX, e.clientY);
+    setTarget(newVal);
+  };
+
+  const handlePointerMove = (e) => {
+    if (e.buttons > 0) {
+      const newVal = calculateValue(e.clientX, e.clientY);
+      if (newVal !== target) {
+        setTarget(newVal);
+      }
+    }
+  };
+
+  const handlePointerUp = (e) => {
+    e.target.releasePointerCapture(e.pointerId);
+    if (onTargetRelease && target !== initialTarget) {
+      onTargetRelease(target);
+    }
+  };
+
+  // SVG Paths
+  const radius = 120;
+  const center = 150;
+  const getPoint = (angleDeg) => {
+    const rad = angleDeg * Math.PI / 180;
+    return { x: center + radius * Math.cos(rad), y: center + radius * Math.sin(rad) };
+  };
+
+  const startAngle = 135;
+  const endAngle = 405;
+  const startPt = getPoint(startAngle);
+  const endPt = getPoint(endAngle);
+  const trackPath = `M ${startPt.x} ${startPt.y} A ${radius} ${radius} 0 1 1 ${endPt.x} ${endPt.y}`;
+
+  const valAngle = 135 + ((target - min) / (max - min)) * 270;
+  const valPt = getPoint(valAngle);
+  const largeArcFlag = valAngle - startAngle > 180 ? 1 : 0;
+  const progressPath = valAngle === startAngle ? "" : `M ${startPt.x} ${startPt.y} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${valPt.x} ${valPt.y}`;
+
+  return (
+    <div className="glass glow-blue" style={{
+      padding: 'clamp(24px, 6vw, 44px) clamp(20px, 5vw, 36px)',
+      textAlign: 'center',
+      background: 'rgba(255, 255, 255, 0.45)',
+      position: 'relative',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column',
+    }}>
+      <p style={{
+        fontSize: 11, fontWeight: 700, letterSpacing: '0.12em',
+        color: '#64748b', textTransform: 'uppercase', marginBottom: 14,
+        alignSelf: 'center',
+        width: '100%'
+      }}>
+        Regolazione Clima
+      </p>
+
+      <div style={{ position: 'relative', width: '100%', maxWidth: '300px', margin: '0 auto' }}>
+        <svg
+          ref={svgRef}
+          viewBox="0 0 300 300"
+          style={{ width: '100%', height: 'auto', touchAction: 'none', overflow: 'visible', display: 'block' }}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+        >
+          {/* Track */}
+          <path d={trackPath} fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="18" strokeLinecap="round" />
+          
+          {/* Progress */}
+          {progressPath && (
+            <path d={progressPath} fill="none" stroke="#0ea5e9" strokeWidth="18" strokeLinecap="round" 
+              style={{ transition: 'stroke-dasharray 0.1s' }} />
+          )}
+          
+          {/* Knob */}
+          <circle cx={valPt.x} cy={valPt.y} r="14" fill="#fff" stroke="#0284c7" strokeWidth="4" 
+            style={{ cursor: 'grab', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }} />
+        </svg>
+
+        <div style={{
+          position: 'absolute',
+          top: '50%', left: '50%',
+          transform: 'translate(-50%, -50%)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          pointerEvents: 'none',
+        }}>
+          {/* Ambient Temperature */}
+          <div style={{
+            fontSize: 'clamp(48px, 14vw, 68px)',
+            fontWeight: 900, lineHeight: 1,
+            letterSpacing: '-2px', color: '#0f172a',
+            fontFamily: 'Inter, sans-serif'
+          }}>
+            {currentTemp !== null ? currentTemp.toFixed(1) : '--'}
+          </div>
+
+          {/* Target & Status */}
+          <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 14, color: '#475569', fontWeight: 400 }}>
+              Target: <strong style={{ color: '#0ea5e9', fontWeight: 600 }}>{target.toFixed(1)}°C</strong>
+            </span>
+            <span style={{
+              fontSize: 12, fontWeight: 400,
+              color: currentMode.color, background: currentMode.bg,
+              padding: '4px 10px', borderRadius: 12, border: `1px solid ${currentMode.border}`
+            }}>
+              {currentMode.label}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function StatCard({ label, value, sub, icon, accent }) {

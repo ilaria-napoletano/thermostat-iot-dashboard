@@ -3,7 +3,6 @@ import NavBar from './components/NavBar'
 import Dashboard from './pages/Dashboard'
 import History from './pages/History'
 import Settings from './pages/Settings'
-import Status from './pages/Status'
 
 export default function App() {
   return (
@@ -24,7 +23,6 @@ export default function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/history" element={<History />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/status" element={<Status />} />
           </Routes>
         </main>
       </div>
