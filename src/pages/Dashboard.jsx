@@ -279,7 +279,7 @@ function CircularSlider({ currentTemp, initialTarget, onTargetRelease, currentMo
         alignSelf: 'center',
         width: '100%'
       }}>
-        Regolazione Clima
+        Regolazione Termostato
       </p>
 
       <div style={{ position: 'relative', width: '100%', maxWidth: '300px', margin: '0 auto' }}>
