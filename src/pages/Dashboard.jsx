@@ -10,8 +10,8 @@ const modeInfo = {
 
 const weatherThemes = {
   Soleggiato: {
-    bg: 'linear-gradient(135deg, rgba(253, 224, 71, 0.15), rgba(255, 255, 255, 0.55))',
-    glow: 'rgba(253, 224, 71, 0.15)',
+    bg: 'linear-gradient(135deg, rgba(253, 224, 71, 0.15), rgba(255, 255, 255, 0.78))',
+    glow: 'rgba(253, 224, 71, 0.25)',
     iconColor: 'rgba(253, 224, 71, 0.18)',
     accent: '#d97706',
     watermark: (
@@ -22,8 +22,8 @@ const weatherThemes = {
     )
   },
   Nuvoloso: {
-    bg: 'linear-gradient(135deg, rgba(148, 163, 184, 0.15), rgba(255, 255, 255, 0.55))',
-    glow: 'rgba(148, 163, 184, 0.1)',
+    bg: 'linear-gradient(135deg, rgba(148, 163, 184, 0.15), rgba(255, 255, 255, 0.78))',
+    glow: 'rgba(148, 163, 184, 0.2)',
     iconColor: 'rgba(148, 163, 184, 0.22)',
     accent: '#475569',
     watermark: (
@@ -33,8 +33,8 @@ const weatherThemes = {
     )
   },
   Piovoso: {
-    bg: 'linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(255, 255, 255, 0.55))',
-    glow: 'rgba(56, 189, 248, 0.15)',
+    bg: 'linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(255, 255, 255, 0.78))',
+    glow: 'rgba(56, 189, 248, 0.25)',
     iconColor: 'rgba(56, 189, 248, 0.22)',
     accent: '#0284c7',
     watermark: (
@@ -45,8 +45,8 @@ const weatherThemes = {
     )
   },
   Temporale: {
-    bg: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(255, 255, 255, 0.55))',
-    glow: 'rgba(139, 92, 246, 0.15)',
+    bg: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(255, 255, 255, 0.78))',
+    glow: 'rgba(139, 92, 246, 0.25)',
     iconColor: 'rgba(245, 158, 11, 0.25)',
     accent: '#7c3aed',
     watermark: (
@@ -57,8 +57,8 @@ const weatherThemes = {
     )
   },
   Nevoso: {
-    bg: 'linear-gradient(135deg, rgba(224, 242, 254, 0.2), rgba(255, 255, 255, 0.55))',
-    glow: 'rgba(224, 242, 254, 0.2)',
+    bg: 'linear-gradient(135deg, rgba(224, 242, 254, 0.2), rgba(255, 255, 255, 0.78))',
+    glow: 'rgba(224, 242, 254, 0.3)',
     iconColor: 'rgba(186, 230, 253, 0.25)',
     accent: '#0369a1',
     watermark: (
@@ -68,8 +68,8 @@ const weatherThemes = {
     )
   },
   Nebbia: {
-    bg: 'linear-gradient(135deg, rgba(148, 163, 184, 0.15), rgba(255, 255, 255, 0.55))',
-    glow: 'rgba(148, 163, 184, 0.1)',
+    bg: 'linear-gradient(135deg, rgba(148, 163, 184, 0.15), rgba(255, 255, 255, 0.78))',
+    glow: 'rgba(148, 163, 184, 0.2)',
     iconColor: 'rgba(148, 163, 184, 0.22)',
     accent: '#475569',
     watermark: (
@@ -79,8 +79,8 @@ const weatherThemes = {
     )
   },
   Default: {
-    bg: 'linear-gradient(135deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.55))',
-    glow: 'rgba(255, 255, 255, 0.15)',
+    bg: 'linear-gradient(135deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.78))',
+    glow: 'rgba(255, 255, 255, 0.25)',
     iconColor: 'rgba(148, 163, 184, 0.15)',
     accent: '#0284c7',
     watermark: (
@@ -203,7 +203,7 @@ function CircularSlider({ currentTemp, initialTarget, onTargetRelease, currentMo
     if (!svgRef.current) return target;
     const rect = svgRef.current.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
+    const cy = rect.top + rect.height * (150 / 260);
     const dx = clientX - cx;
     const dy = clientY - cy;
 
@@ -264,7 +264,7 @@ function CircularSlider({ currentTemp, initialTarget, onTargetRelease, currentMo
 
   return (
     <div className="glass glow-blue" style={{
-      padding: 'clamp(24px, 6vw, 44px) clamp(20px, 5vw, 36px)',
+      padding: 'clamp(20px, 5vw, 36px) clamp(20px, 5vw, 36px) clamp(12px, 3vw, 16px)',
       textAlign: 'center',
       background: 'rgba(255, 255, 255, 0.45)',
       position: 'relative',
@@ -285,7 +285,7 @@ function CircularSlider({ currentTemp, initialTarget, onTargetRelease, currentMo
       <div style={{ position: 'relative', width: '100%', maxWidth: '300px', margin: '0 auto' }}>
         <svg
           ref={svgRef}
-          viewBox="0 0 300 300"
+          viewBox="0 0 300 260"
           style={{ width: '100%', height: 'auto', touchAction: 'none', overflow: 'visible', display: 'block' }}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
@@ -307,7 +307,7 @@ function CircularSlider({ currentTemp, initialTarget, onTargetRelease, currentMo
 
         <div style={{
           position: 'absolute',
-          top: '50%', left: '50%',
+          top: '57.7%', left: '50%',
           transform: 'translate(-50%, -50%)',
           display: 'flex', flexDirection: 'column', alignItems: 'center',
           pointerEvents: 'none',
@@ -386,7 +386,7 @@ function MeteoCard({ data, error }) {
     <div className="glass" style={{
       padding: 'clamp(18px, 4vw, 24px)',
       background: theme.bg,
-      boxShadow: `0 8px 32px ${theme.glow}`,
+      boxShadow: `0 12px 32px rgba(15, 23, 42, 0.08), 0 4px 20px ${theme.glow}, inset 0 1px 2px rgba(255, 255, 255, 0.9)`,
       position: 'relative',
       overflow: 'hidden',
       transition: 'all 0.4s ease',
