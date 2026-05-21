@@ -28,6 +28,9 @@ function generateMeteoMock() {
   return {
     current_temperature: temps[temps.length - 1],
     current_humidity: hums[hums.length - 1],
+    wind_speed: 12.4,
+    meteo_status_text: "Soleggiato",
+    meteo_status_icon: "☀️",
     history_24h: {
       times: times,
       temperatures: temps,
@@ -49,6 +52,9 @@ export function useMeteo() {
       setData({
         temperature: mockData.current_temperature,
         humidity: mockData.current_humidity,
+        windSpeed: mockData.wind_speed,
+        weatherText: mockData.meteo_status_text,
+        weatherIcon: mockData.meteo_status_icon,
         lastUpdated: mockData.last_update
       })
       
@@ -88,6 +94,9 @@ export function useMeteo() {
               setData({
                 temperature: val.current_temperature ?? null,
                 humidity: val.current_humidity ?? null,
+                windSpeed: val.wind_speed ?? null,
+                weatherText: val.meteo_status_text ?? null,
+                weatherIcon: val.meteo_status_icon ?? null,
                 lastUpdated: lastUpdatedMs
               })
 

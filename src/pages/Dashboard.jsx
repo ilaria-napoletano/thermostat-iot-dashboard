@@ -8,6 +8,89 @@ const modeInfo = {
   idle:    { label: 'In standby', color: '#94a3b8', bg: 'rgba(148,163,184,0.1)', border: 'rgba(148,163,184,0.2)' },
 }
 
+const weatherThemes = {
+  Soleggiato: {
+    bg: 'linear-gradient(135deg, rgba(253, 224, 71, 0.15), rgba(255, 255, 255, 0.55))',
+    glow: 'rgba(253, 224, 71, 0.15)',
+    iconColor: 'rgba(253, 224, 71, 0.18)',
+    accent: '#d97706',
+    watermark: (
+      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="4" fill="rgba(253, 224, 71, 0.05)" />
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+      </svg>
+    )
+  },
+  Nuvoloso: {
+    bg: 'linear-gradient(135deg, rgba(148, 163, 184, 0.15), rgba(255, 255, 255, 0.55))',
+    glow: 'rgba(148, 163, 184, 0.1)',
+    iconColor: 'rgba(148, 163, 184, 0.22)',
+    accent: '#475569',
+    watermark: (
+      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.47 0-.89.09-1.25.26A5 5 0 0 0 5 13c0 .59.08 1.16.22 1.7A3.5 3.5 0 0 0 3 18" fill="rgba(148, 163, 184, 0.05)" />
+      </svg>
+    )
+  },
+  Piovoso: {
+    bg: 'linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(255, 255, 255, 0.55))',
+    glow: 'rgba(56, 189, 248, 0.15)',
+    iconColor: 'rgba(56, 189, 248, 0.22)',
+    accent: '#0284c7',
+    watermark: (
+      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.47 0-.89.09-1.25.26A5 5 0 0 0 5 13c0 .59.08 1.16.22 1.7A3.5 3.5 0 0 0 3 18" fill="rgba(56, 189, 248, 0.05)" />
+        <path d="M8 19v2M12 20v2M16 19v2" />
+      </svg>
+    )
+  },
+  Temporale: {
+    bg: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(255, 255, 255, 0.55))',
+    glow: 'rgba(139, 92, 246, 0.15)',
+    iconColor: 'rgba(245, 158, 11, 0.25)',
+    accent: '#7c3aed',
+    watermark: (
+      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.47 0-.89.09-1.25.26A5 5 0 0 0 5 13c0 .59.08 1.16.22 1.7A3.5 3.5 0 0 0 3 18" fill="rgba(139, 92, 246, 0.05)" />
+        <path d="m13 18-3 4h3l-2 3 5-5h-3z" fill="rgba(245, 158, 11, 0.05)" />
+      </svg>
+    )
+  },
+  Nevoso: {
+    bg: 'linear-gradient(135deg, rgba(224, 242, 254, 0.2), rgba(255, 255, 255, 0.55))',
+    glow: 'rgba(224, 242, 254, 0.2)',
+    iconColor: 'rgba(186, 230, 253, 0.25)',
+    accent: '#0369a1',
+    watermark: (
+      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2v20M17 5L7 19M5 5l14 14M4 12h16M19 8l-3 4 3 4M5 8l3 4-3 4" />
+      </svg>
+    )
+  },
+  Nebbia: {
+    bg: 'linear-gradient(135deg, rgba(148, 163, 184, 0.15), rgba(255, 255, 255, 0.55))',
+    glow: 'rgba(148, 163, 184, 0.1)',
+    iconColor: 'rgba(148, 163, 184, 0.22)',
+    accent: '#475569',
+    watermark: (
+      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+      </svg>
+    )
+  },
+  Default: {
+    bg: 'linear-gradient(135deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.55))',
+    glow: 'rgba(255, 255, 255, 0.15)',
+    iconColor: 'rgba(148, 163, 184, 0.15)',
+    accent: '#0284c7',
+    watermark: (
+      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+      </svg>
+    )
+  }
+}
+
 export default function Dashboard() {
   const { data, loading, error, isMock } = useThermostat()
   const { data: meteoData, loading: meteoLoading, error: meteoError } = useMeteo()
@@ -88,35 +171,11 @@ export default function Dashboard() {
 
       {/* Stats row */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12 }}>
-        <StatCard label="Umidità" value={humidity !== null ? `${humidity}%` : '--'} sub="Umidità relativa" icon="💧" accent="#0284c7" />
+        <StatCard label="Umidità interna" value={humidity !== null ? `${humidity}%` : '--'} sub="Umidità relativa in casa" icon="💧" accent="#0284c7" />
       </div>
 
-      {/* Meteo Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-        <StatCard 
-          label="Temp. Bari" 
-          value={meteoData?.temperature != null ? `${meteoData.temperature.toFixed(1)}°C` : '--'} 
-          sub={meteoData?.lastUpdated ? `Aggiornato alle ${new Date(meteoData.lastUpdated).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}` : 'In attesa...'} 
-          icon="🌡️" 
-          accent="#d97706" 
-        />
-        <StatCard 
-          label="Umidità Bari" 
-          value={meteoData?.humidity != null ? `${meteoData.humidity}%` : '--'} 
-          sub={meteoData?.lastUpdated ? `Aggiornato alle ${new Date(meteoData.lastUpdated).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}` : 'In attesa...'} 
-          icon="☁️" 
-          accent="#0284c7" 
-        />
-      </div>
-
-      {meteoError && (
-        <div style={{
-          background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
-          borderRadius: 12, padding: '12px 16px', color: '#f87171', fontSize: 13, textAlign: 'center'
-        }}>
-          Errore Meteo: {meteoError}
-        </div>
-      )}
+      {/* Unified Meteo Card */}
+      <MeteoCard data={meteoData} error={meteoError} />
 
       {data?.lastUpdated && (
         <p style={{ textAlign: 'center', fontSize: 12, color: '#334155' }}>
@@ -298,6 +357,106 @@ function StatCard({ label, value, sub, icon, accent }) {
         letterSpacing: '-1px', lineHeight: 1,
       }}>{value}</p>
       <p style={{ fontSize: 11, color: '#334155', marginTop: 5 }}>{sub}</p>
+    </div>
+  )
+}
+
+function MeteoCard({ data, error }) {
+  if (error) {
+    return (
+      <div style={{
+        background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
+        borderRadius: 12, padding: '12px 16px', color: '#f87171', fontSize: 13, textAlign: 'center'
+      }}>
+        Errore Meteo Bari: {error}
+      </div>
+    )
+  }
+
+  const temp = data?.temperature ?? null
+  const humidity = data?.humidity ?? null
+  const windSpeed = data?.windSpeed ?? null
+  const weatherText = data?.weatherText ?? "Nuvoloso"
+  const weatherIcon = data?.weatherIcon ?? "☁️"
+  const lastUpdated = data?.lastUpdated ?? null
+
+  const theme = weatherThemes[weatherText] || weatherThemes.Default
+
+  return (
+    <div className="glass" style={{
+      padding: 'clamp(18px, 4vw, 24px)',
+      background: theme.bg,
+      boxShadow: `0 8px 32px ${theme.glow}`,
+      position: 'relative',
+      overflow: 'hidden',
+      transition: 'all 0.4s ease',
+    }}>
+      {/* Background Watermark SVG */}
+      <div style={{
+        position: 'absolute',
+        right: '-15px',
+        bottom: '-25px',
+        color: theme.iconColor,
+        pointerEvents: 'none',
+        transform: 'rotate(-5deg)',
+      }}>
+        {theme.watermark}
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14, position: 'relative', zIndex: 1 }}>
+        <div>
+          <h2 style={{
+            fontSize: 11, fontWeight: 700, color: '#475569',
+            textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0
+          }}>
+            Meteo a Bari
+          </h2>
+          <p style={{
+            fontSize: 'clamp(13px, 3.5vw, 15px)',
+            fontWeight: 600,
+            color: '#1e293b',
+            marginTop: 4,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6
+          }}>
+            Oggi è {weatherText.toLowerCase()} <span style={{ fontSize: '1.2em' }}>{weatherIcon}</span>
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 4 }}>
+          {/* Temperature */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <span style={{ fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Temp.</span>
+            <span style={{ fontSize: 'clamp(18px, 4.5vw, 24px)', fontWeight: 800, color: '#1e293b' }}>
+              {temp !== null ? `${temp.toFixed(1)}°C` : '--'}
+            </span>
+          </div>
+
+          {/* Humidity */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <span style={{ fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Umidità</span>
+            <span style={{ fontSize: 'clamp(18px, 4.5vw, 24px)', fontWeight: 800, color: '#0284c7' }}>
+              {humidity !== null ? `${humidity}%` : '--'}
+            </span>
+          </div>
+
+          {/* Wind Speed */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <span style={{ fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Vento</span>
+            <span style={{ fontSize: 'clamp(18px, 4.5vw, 24px)', fontWeight: 800, color: '#059669' }}>
+              {windSpeed !== null ? `${windSpeed.toFixed(1)}` : '--'}
+              <span style={{ fontSize: 10, fontWeight: 500, color: '#64748b', marginLeft: 2 }}>km/h</span>
+            </span>
+          </div>
+        </div>
+
+        {lastUpdated && (
+          <p style={{ fontSize: 10, color: '#64748b', marginTop: 4, marginBottom: 0 }}>
+            Ultimo aggiornamento alle {new Date(lastUpdated).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
+          </p>
+        )}
+      </div>
     </div>
   )
 }
