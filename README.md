@@ -85,11 +85,3 @@ Il progetto include uno script (`meteo-firebase/fetch_data.js`) che scarica il m
 5. Valore: Incolla l'intero contenuto del tuo file `serviceAccountKey.json`.
 6. Clicca **Add secret**.
 
-Il file `serviceAccountKey.json` locale viene ignorato automaticamente per ragioni di sicurezza e non verrà mai caricato pubblicamente.
-
----
-
-## Note
-
-- Il file `.env` contiene le credenziali Firebase e **non va mai condiviso o caricato su GitHub**
-- La cartella `node_modules` è pesante (~300 MB) e non va copiata: si rigenera con `npm install`
