@@ -7,7 +7,7 @@
 }
 
 body {
-  background: linear-gradient(180deg, #2799cd 0%, #2799cd 15%, #e0f2fe 50%, #f8fafc 80%, #f1f5f9 100%);
+  background: radial-gradient(circle at center, #0284c7 0%, #e0f2fe 35%, #f1f5f9 70%, #ffffff 100%);
   background-attachment: fixed;
   color: #1e293b;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
