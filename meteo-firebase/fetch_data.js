@@ -10,8 +10,8 @@ const db = admin.firestore();
 const API_URL = "https://api.open-meteo.com/v1/forecast?latitude=41.1171&longitude=16.8719&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto";
 
 function getWeatherStatus(code) {
-  if (code === 0) return { text: "Soleggiato", icon: "☀️" };
-  if (code >= 1 && code <= 3) return { text: "Nuvoloso", icon: "☁️" };
+  if (code >= 0 && code <= 1) return { text: "Soleggiato", icon: "☀️" };
+  if (code >= 2 && code <= 3) return { text: "Nuvoloso", icon: "☁️" };
   if (code === 45 || code === 48) return { text: "Nebbia", icon: "🌫️" };
   if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return { text: "Piovoso", icon: "🌧️" };
   if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) return { text: "Nevoso", icon: "❄️" };
