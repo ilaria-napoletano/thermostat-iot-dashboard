@@ -12,16 +12,18 @@ async function getFirestoreDb() {
 }
 
 export function useUserSettings() {
-  const [settings, setSettings] = useState({ userName: 'Utente' })
+  const [settings, setSettings] = useState({ userName: 'Utente', gender: 'm' })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
     if (USE_MOCK) {
       const savedName = localStorage.getItem('mockUserName')
-      if (savedName) {
-        setSettings({ userName: savedName })
-      }
+      const savedGender = localStorage.getItem('mockGender')
+      setSettings({
+        userName: savedName || 'Utente',
+        gender: savedGender || 'm'
+      })
       setLoading(false)
       return
     }
@@ -38,11 +40,12 @@ export function useUserSettings() {
           if (docSnap.exists()) {
             const val = docSnap.data()
             setSettings({
-              userName: val.userName || 'Utente'
-            })
+              userName: val.userName || 'Utente',
+              gender: val.gender || 'm'
+              })
           } else {
             // Se il documento non esiste, usiamo il default
-            setSettings({ userName: 'Utente' })
+            setSettings({ userName: 'Utente', gender: 'm' })
           }
           setLoading(false)
         }, (err) => {
@@ -62,10 +65,11 @@ export function useUserSettings() {
     return () => unsubscribe?.()
   }, [])
 
-  const updateUserName = async (newName) => {
+  const updateSettings = async ({ userName, gender }) => {
     if (USE_MOCK) {
-      localStorage.setItem('mockUserName', newName)
-      setSettings({ userName: newName })
+      localStorage.setItem('mockUserName', userName)
+      localStorage.setItem('mockGender', gender)
+      setSettings({ userName, gender })
       return
     }
 
@@ -73,12 +77,12 @@ export function useUserSettings() {
       const { doc, setDoc } = await import('firebase/firestore')
       const db = await getFirestoreDb()
       const docRef = doc(db, 'user_settings', 'preferences')
-      await setDoc(docRef, { userName: newName }, { merge: true })
+      await setDoc(docRef, { userName, gender }, { merge: true })
     } catch (err) {
       console.error("Errore durante l'aggiornamento in Firestore:", err)
       throw err
     }
   }
 
-  return { settings, loading, error, isMock: USE_MOCK, updateUserName }
+  return { settings, loading, error, isMock: USE_MOCK, updateSettings }
 }

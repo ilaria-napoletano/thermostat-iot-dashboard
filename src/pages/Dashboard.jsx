@@ -117,6 +117,12 @@ const weatherThemes = {
   }
 }
 
+const getGreeting = (gender) => {
+  if (gender === 'f') return 'Bentornata';
+  if (gender === 'x') return 'Bentornatə';
+  return 'Bentornato';
+};
+
 export default function Dashboard() {
   const { data, loading, error, isMock } = useThermostat()
   const { data: meteoData, loading: meteoLoading, error: meteoError } = useMeteo()
@@ -182,7 +188,7 @@ export default function Dashboard() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h1 style={{ fontSize: 'clamp(18px, 4vw, 22px)', fontWeight: 700, color: '#1e293b' }}>
-            Bentornato, {settings?.userName ?? 'Utente'}!
+            {getGreeting(settings?.gender)}, {settings?.userName ?? 'Utente'}!
           </h1>
           <p style={{ fontSize: 13, color: '#475569', marginTop: 2 }}>Monitoraggio in tempo reale</p>
         </div>
