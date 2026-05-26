@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useThermostat } from '../hooks/useThermostat'
 import { useMeteo } from '../hooks/useMeteo'
-import { useUserSettings } from '../hooks/useUserSettings'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 
