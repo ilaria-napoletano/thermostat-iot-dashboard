@@ -1,4 +1,4 @@
-# ThermoIoT Dashboard
+# Thermostat-IoT Dashboard
 
 Dashboard web per il monitoraggio in tempo reale di un termostato IoT basato su ESP8266, con dati salvati su Firebase Realtime Database.
 
