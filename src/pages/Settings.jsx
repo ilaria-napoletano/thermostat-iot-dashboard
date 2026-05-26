@@ -11,7 +11,14 @@ const glass = {
 }
 
 export default function Settings() {
-  const { isMock } = useThermostat()
+  const { isMock, data: thermostatData } = useThermostat()
+  const [isteresi, setIsteresi] = useState(0.2)
+
+  useEffect(() => {
+    if (thermostatData && thermostatData.isteresi !== undefined) {
+      setIsteresi(thermostatData.isteresi)
+    }
+  }, [thermostatData?.isteresi])
   const { currentUser, login, logout, updateProfile, loading: authLoading } = useAuth()
   
   const [userName, setUserName] = useState('')
@@ -44,6 +51,20 @@ export default function Settings() {
       alert('Errore durante il salvataggio: ' + err.message)
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const handleIsteresiChange = async (val) => {
+    const newVal = Number(val);
+    setIsteresi(newVal);
+    if (isMock) return;
+    try {
+      const { ref, set } = await import('firebase/database');
+      const { db } = await import('../firebase/config');
+      const targetRef = ref(db, 'termostato1/config/isteresi');
+      await set(targetRef, newVal);
+    } catch (err) {
+      console.error('Errore durante il salvataggio isteresi:', err);
     }
   }
 
@@ -229,6 +250,40 @@ export default function Settings() {
           {saveSuccess && (
             <p style={{ fontSize: 12, color: '#059669', margin: 0, textAlign: 'right' }}>Impostazioni aggiornate con successo!</p>
           )}
+        </div>
+      </div>
+
+      <div style={{ ...glass, padding: 24, marginBottom: 16 }}>
+        <p style={{
+          fontSize: 11, fontWeight: 700, color: '#64748b',
+          textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16,
+        }}>
+          Preferenze Termostato
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <label style={{ fontSize: 13, color: '#475569', fontWeight: 500 }}>
+              Isteresi: <strong style={{ color: '#0284c7' }}>{isteresi.toFixed(1)}°C</strong>
+            </label>
+            <p style={{ fontSize: 11, color: '#64748b', marginTop: -4 }}>
+              Determina lo scarto di temperatura (in °C) per l'accensione e lo spegnimento del riscaldamento.
+            </p>
+            <input 
+              type="range" 
+              min="0.1" 
+              max="0.5" 
+              step="0.1" 
+              value={isteresi} 
+              onChange={e => setIsteresi(Number(e.target.value))}
+              onMouseUp={e => handleIsteresiChange(e.target.value)}
+              onTouchEnd={e => handleIsteresiChange(e.target.value)}
+              style={{ width: '100%', cursor: 'pointer' }}
+            />
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#94a3b8' }}>
+              <span>0.1°C</span>
+              <span>0.5°C</span>
+            </div>
+          </div>
         </div>
       </div>
 

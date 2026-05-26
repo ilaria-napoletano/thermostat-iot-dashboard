@@ -52,6 +52,7 @@ export function useThermostat() {
                 temperature: val.stato?.temperatura ?? null,
                 humidity: val.stato?.umidita ?? null,
                 target: val.config?.soglia ?? null,
+                isteresi: val.config?.isteresi ?? 0.2,
                 isOn: val.stato?.wifi_ok ?? true,
                 mode: val.stato?.uscita === 1 ? 'heating' : 'idle',
                 lastUpdated: val.stato?.timestamp 
