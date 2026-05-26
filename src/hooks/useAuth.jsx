@@ -17,11 +17,6 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check local storage for persistent login
-    const storedUser = localStorage.getItem('authUser');
-    if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser));
-    }
     setLoading(false);
   }, []);
 
@@ -30,7 +25,6 @@ export function AuthProvider({ children }) {
       if (username === 'test' && password === 'test') {
         const user = { username: 'test', userName: 'Utente Test', gender: 'm' };
         setCurrentUser(user);
-        localStorage.setItem('authUser', JSON.stringify(user));
         return user;
       }
       throw new Error('Credenziali non valide. (Mock: usa test/test)');
@@ -52,7 +46,6 @@ export function AuthProvider({ children }) {
           gender: data.gender || 'm' 
         };
         setCurrentUser(user);
-        localStorage.setItem('authUser', JSON.stringify(user));
         return user;
       } else {
         throw new Error('Password errata');
@@ -64,7 +57,6 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     setCurrentUser(null);
-    localStorage.removeItem('authUser');
   };
 
   const updateProfile = async (updates) => {
@@ -72,7 +64,6 @@ export function AuthProvider({ children }) {
     
     const newUser = { ...currentUser, ...updates };
     setCurrentUser(newUser);
-    localStorage.setItem('authUser', JSON.stringify(newUser));
 
     if (!USE_MOCK) {
       const { doc, setDoc } = await import('firebase/firestore');
