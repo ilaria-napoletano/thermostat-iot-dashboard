@@ -27,13 +27,11 @@ export default function NavBar() {
           height: 64,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{
-              width: 32, height: 32,
-              background: 'rgba(255,255,255,0.2)',
-              borderRadius: 8,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 16, color: '#fff'
-            }}>🌡</div>
+            <img 
+              src="/logo.png" 
+              alt="ThermoIoT Logo" 
+              style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'contain' }} 
+            />
             <span style={{ fontWeight: 700, fontSize: 18, color: '#ffffff', letterSpacing: '-0.3px' }}>
               ThermoIoT
             </span>
