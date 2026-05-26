@@ -40,10 +40,16 @@ const weatherThemes = {
     iconColor: 'rgba(245, 158, 11, 0.35)',
     accent: '#d97706',
     watermark: (
-      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="10" r="3" fill="rgba(253, 224, 71, 0.15)" />
-        <path d="M12 5V3M7.05 7.05L5.64 5.64M16.95 7.05l1.41-1.41M19 10h2M5 10h2" />
-        <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.47 0-.89.09-1.25.26A5 5 0 0 0 5 13c0 .59.08 1.16.22 1.7A3.5 3.5 0 0 0 3 18" fill="rgba(148, 163, 184, 0.05)" />
+      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        {/* Sun peeking out - Warm Amber/Yellow */}
+        <circle cx="12" cy="10" r="3" stroke="#f59e0b" fill="rgba(253, 224, 71, 0.35)" />
+        <path d="M12 5V3M7.05 7.05L5.64 5.64M16.95 7.05l1.41-1.41M19 10h2M5 10h2" stroke="#f59e0b" />
+        {/* Fluffy Cloud in front - Slate Gray / Soft White */}
+        <path 
+          d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.47 0-.89.09-1.25.26A5 5 0 0 0 5 13c0 .59.08 1.16.22 1.7A3.5 3.5 0 0 0 3 18" 
+          stroke="rgba(100, 116, 139, 0.45)" 
+          fill="rgba(255, 255, 255, 0.4)" 
+        />
       </svg>
     )
   },
@@ -73,12 +79,29 @@ const weatherThemes = {
   Temporale: {
     bg: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(255, 255, 255, 0.78))',
     glow: 'rgba(139, 92, 246, 0.25)',
-    iconColor: 'rgba(245, 158, 11, 0.25)',
+    iconColor: 'rgba(139, 92, 246, 0.25)',
     accent: '#7c3aed',
     watermark: (
-      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.47 0-.89.09-1.25.26A5 5 0 0 0 5 13c0 .59.08 1.16.22 1.7A3.5 3.5 0 0 0 3 18" fill="rgba(139, 92, 246, 0.05)" />
-        <path d="m13 18-3 4h3l-2 3 5-5h-3z" fill="rgba(245, 158, 11, 0.05)" />
+      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        {/* Storm Cloud - Elegant stormy purple/gray */}
+        <path 
+          d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.47 0-.89.09-1.25.26A5 5 0 0 0 5 13c0 .59.08 1.16.22 1.7A3.5 3.5 0 0 0 3 18" 
+          stroke="rgba(124, 58, 237, 0.5)" 
+          fill="rgba(139, 92, 246, 0.15)" 
+        />
+        {/* Lightning Bolt - Bright Amber/Yellow */}
+        <path 
+          d="m13 18-3 4h3l-2 3 5-5h-3z" 
+          stroke="#f59e0b" 
+          fill="rgba(245, 158, 11, 0.35)" 
+          strokeWidth="1.4" 
+        />
+        {/* Rain Drops - Sky Blue */}
+        <path 
+          d="M7 21l-1.5 3M11 22l-1.5 3M16 21l-1.5 3" 
+          stroke="#38bdf8" 
+          strokeWidth="1.4" 
+        />
       </svg>
     )
   },
