@@ -2,6 +2,8 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { useThermostat } from '../hooks/useThermostat'
 import { useMeteo } from '../hooks/useMeteo'
 import { useUserSettings } from '../hooks/useUserSettings'
+import { useAuth } from '../hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
 
 const modeInfo = {
   heating: { label: 'Riscaldamento attivo', color: '#fb923c', bg: 'rgba(251,146,60,0.1)', border: 'rgba(251,146,60,0.25)' },
@@ -149,9 +151,15 @@ const getGreeting = (gender) => {
 export default function Dashboard() {
   const { data, loading, error, isMock } = useThermostat()
   const { data: meteoData, loading: meteoLoading, error: meteoError } = useMeteo()
-  const { settings } = useUserSettings()
+  const { currentUser } = useAuth()
+  const navigate = useNavigate()
 
   const handleTargetRelease = useCallback(async (newTarget) => {
+    if (!currentUser) {
+      alert("Effettua l'accesso per poter modificare la temperatura.");
+      navigate("/settings");
+      return;
+    }
     if (isMock) return;
     try {
       const { ref, set } = await import('firebase/database');
@@ -161,7 +169,7 @@ export default function Dashboard() {
     } catch (err) {
       console.error('Errore durante il salvataggio:', err);
     }
-  }, [isMock]);
+  }, [isMock, currentUser, navigate]);
 
   if (loading) return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 300 }}>
@@ -211,7 +219,7 @@ export default function Dashboard() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h1 style={{ fontSize: 'clamp(18px, 4vw, 22px)', fontWeight: 700, color: '#1e293b' }}>
-            {getGreeting(settings?.gender)}, {settings?.userName ?? 'Utente'}!
+            {currentUser ? `${getGreeting(currentUser.gender)}, ${currentUser.userName}!` : 'Benvenuto utente!'}
           </h1>
           <p style={{ fontSize: 13, color: '#475569', marginTop: 2 }}>Monitoraggio in tempo reale</p>
         </div>

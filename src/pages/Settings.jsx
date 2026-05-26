@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useThermostat } from '../hooks/useThermostat'
-import { useUserSettings } from '../hooks/useUserSettings'
+import { useAuth } from '../hooks/useAuth'
 
 const glass = {
   background: 'rgba(255, 255, 255, 0.65)',
@@ -12,24 +12,31 @@ const glass = {
 
 export default function Settings() {
   const { isMock } = useThermostat()
-  const { settings, updateSettings } = useUserSettings()
+  const { currentUser, login, logout, updateProfile, loading: authLoading } = useAuth()
+  
   const [userName, setUserName] = useState('')
   const [gender, setGender] = useState('m')
   const [isSaving, setIsSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
 
+  // Login states
+  const [loginUser, setLoginUser] = useState('')
+  const [loginPass, setLoginPass] = useState('')
+  const [loginError, setLoginError] = useState('')
+  const [isLoggingIn, setIsLoggingIn] = useState(false)
+
   useEffect(() => {
-    if (settings) {
-      if (settings.userName) setUserName(settings.userName)
-      if (settings.gender) setGender(settings.gender)
+    if (currentUser) {
+      if (currentUser.userName) setUserName(currentUser.userName)
+      if (currentUser.gender) setGender(currentUser.gender)
     }
-  }, [settings])
+  }, [currentUser])
 
   const handleSaveSettings = async () => {
     setIsSaving(true)
     setSaveSuccess(false)
     try {
-      await updateSettings({ userName, gender })
+      await updateProfile({ userName, gender })
       setSaveSuccess(true)
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (err) {
@@ -40,11 +47,106 @@ export default function Settings() {
     }
   }
 
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setIsLoggingIn(true)
+    setLoginError('')
+    try {
+      await login(loginUser, loginPass)
+    } catch (err) {
+      setLoginError(err.message)
+    } finally {
+      setIsLoggingIn(false)
+    }
+  }
+
+  if (authLoading) {
+    return <p>Caricamento...</p>
+  }
+
+  if (!currentUser) {
+    return (
+      <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div>
+          <h1 style={{ fontSize: 'clamp(18px, 4vw, 22px)', fontWeight: 700, color: '#1e293b' }}>Accesso Richiesto</h1>
+          <p style={{ fontSize: 13, color: '#475569', marginTop: 2 }}>Effettua il login per configurare il termostato e modificare la temperatura.</p>
+        </div>
+
+        {isMock && (
+          <div style={{
+            background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.2)',
+            borderRadius: 12, padding: '10px 16px', color: '#0284c7', fontSize: 13,
+          }}>
+            Modalità demo — Usa "test" come username e password.
+          </div>
+        )}
+
+        <div style={{ ...glass, padding: 24, marginBottom: 16 }}>
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <label style={{ fontSize: 13, color: '#475569', fontWeight: 500 }}>Username</label>
+              <input 
+                type="text" 
+                value={loginUser} 
+                onChange={e => setLoginUser(e.target.value)}
+                placeholder="Inserisci username"
+                style={{
+                  width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid rgba(0,0,0,0.1)',
+                  background: 'rgba(255,255,255,0.8)', fontSize: 14, color: '#1e293b', outline: 'none'
+                }}
+                required
+              />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <label style={{ fontSize: 13, color: '#475569', fontWeight: 500 }}>Password</label>
+              <input 
+                type="password" 
+                value={loginPass} 
+                onChange={e => setLoginPass(e.target.value)}
+                placeholder="Inserisci password"
+                style={{
+                  width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid rgba(0,0,0,0.1)',
+                  background: 'rgba(255,255,255,0.8)', fontSize: 14, color: '#1e293b', outline: 'none'
+                }}
+                required
+              />
+            </div>
+            
+            {loginError && <p style={{ color: '#ef4444', fontSize: 13, margin: 0 }}>{loginError}</p>}
+
+            <button 
+              type="submit"
+              disabled={isLoggingIn || !loginUser || !loginPass}
+              style={{
+                padding: '10px 24px', borderRadius: 10, background: '#0284c7', color: 'white',
+                border: 'none', fontWeight: 600, fontSize: 14, cursor: (isLoggingIn || !loginUser || !loginPass) ? 'not-allowed' : 'pointer',
+                opacity: (isLoggingIn || !loginUser || !loginPass) ? 0.6 : 1, transition: 'all 0.2s', marginTop: 8
+              }}
+            >
+              {isLoggingIn ? 'Accesso in corso...' : 'Accedi'}
+            </button>
+          </form>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <div>
-        <h1 style={{ fontSize: 'clamp(18px, 4vw, 22px)', fontWeight: 700, color: '#1e293b' }}>Impostazioni</h1>
-        <p style={{ fontSize: 13, color: '#475569', marginTop: 2 }}>Configurazione termostato</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <h1 style={{ fontSize: 'clamp(18px, 4vw, 22px)', fontWeight: 700, color: '#1e293b' }}>Impostazioni</h1>
+          <p style={{ fontSize: 13, color: '#475569', marginTop: 2 }}>Configurazione termostato</p>
+        </div>
+        <button 
+          onClick={logout}
+          style={{
+            padding: '6px 14px', borderRadius: 8, background: 'rgba(239,68,68,0.1)', color: '#ef4444',
+            border: '1px solid rgba(239,68,68,0.2)', fontWeight: 600, fontSize: 13, cursor: 'pointer'
+          }}
+        >
+          Esci
+        </button>
       </div>
 
       {isMock && (
@@ -52,7 +154,7 @@ export default function Settings() {
           background: 'rgba(234,179,8,0.08)', border: '1px solid rgba(234,179,8,0.2)',
           borderRadius: 12, padding: '10px 16px', color: '#d97706', fontSize: 13,
         }}>
-          Modalità demo — le modifiche non vengono salvate
+          Modalità demo — le modifiche sono salvate localmente.
         </div>
       )}
 
@@ -61,7 +163,7 @@ export default function Settings() {
           fontSize: 11, fontWeight: 700, color: '#64748b',
           textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16,
         }}>
-          Preferenze Utente
+          Preferenze Utente ({currentUser.username})
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -113,11 +215,11 @@ export default function Settings() {
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
             <button 
               onClick={handleSaveSettings}
-              disabled={isMock || isSaving || !userName.trim()}
+              disabled={isMock && false || isSaving || !userName.trim()}
               style={{
                 padding: '10px 24px', borderRadius: 10, background: '#0284c7', color: 'white',
-                border: 'none', fontWeight: 600, fontSize: 14, cursor: (isMock || isSaving || !userName.trim()) ? 'not-allowed' : 'pointer',
-                opacity: (isMock || isSaving || !userName.trim()) ? 0.6 : 1, transition: 'all 0.2s',
+                border: 'none', fontWeight: 600, fontSize: 14, cursor: (isSaving || !userName.trim()) ? 'not-allowed' : 'pointer',
+                opacity: (isSaving || !userName.trim()) ? 0.6 : 1, transition: 'all 0.2s',
                 boxShadow: '0 4px 12px rgba(2, 132, 199, 0.15)'
               }}
             >
@@ -154,4 +256,3 @@ export default function Settings() {
     </div>
   )
 }
-
