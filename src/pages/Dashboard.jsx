@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useThermostat } from '../hooks/useThermostat'
 import { useMeteo } from '../hooks/useMeteo'
+import { useUserSettings } from '../hooks/useUserSettings'
 
 const modeInfo = {
   heating: { label: 'Riscaldamento attivo', color: '#fb923c', bg: 'rgba(251,146,60,0.1)', border: 'rgba(251,146,60,0.25)' },
@@ -10,14 +11,39 @@ const modeInfo = {
 
 const weatherThemes = {
   Soleggiato: {
-    bg: 'linear-gradient(135deg, rgba(253, 224, 71, 0.15), rgba(255, 255, 255, 0.78))',
+    bg: 'linear-gradient(135deg, rgba(253, 224, 71, 0.26), rgba(255, 255, 255, 0.78))',
     glow: 'rgba(253, 224, 71, 0.25)',
-    iconColor: 'rgba(253, 224, 71, 0.18)',
+    iconColor: 'rgba(217, 119, 6, 0.38)',
     accent: '#d97706',
     watermark: (
       <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="4" fill="rgba(253, 224, 71, 0.05)" />
+        <circle cx="12" cy="12" r="4" fill="rgba(253, 224, 71, 0.25)" />
         <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+      </svg>
+    )
+  },
+  Sereno: {
+    bg: 'linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.95))',
+    glow: 'rgba(15, 23, 42, 0.35)',
+    iconColor: 'rgba(251, 191, 36, 0.32)',
+    accent: '#facc15',
+    isDark: true,
+    watermark: (
+      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" fill="rgba(251, 191, 36, 0.15)" />
+      </svg>
+    )
+  },
+  Variabile: {
+    bg: 'linear-gradient(135deg, rgba(253, 224, 71, 0.18), rgba(148, 163, 184, 0.12), rgba(255, 255, 255, 0.78))',
+    glow: 'rgba(253, 224, 71, 0.2)',
+    iconColor: 'rgba(245, 158, 11, 0.35)',
+    accent: '#d97706',
+    watermark: (
+      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="10" r="3" fill="rgba(253, 224, 71, 0.15)" />
+        <path d="M12 5V3M7.05 7.05L5.64 5.64M16.95 7.05l1.41-1.41M19 10h2M5 10h2" />
+        <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.47 0-.89.09-1.25.26A5 5 0 0 0 5 13c0 .59.08 1.16.22 1.7A3.5 3.5 0 0 0 3 18" fill="rgba(148, 163, 184, 0.05)" />
       </svg>
     )
   },
@@ -94,6 +120,7 @@ const weatherThemes = {
 export default function Dashboard() {
   const { data, loading, error, isMock } = useThermostat()
   const { data: meteoData, loading: meteoLoading, error: meteoError } = useMeteo()
+  const { settings } = useUserSettings()
 
   const handleTargetRelease = useCallback(async (newTarget) => {
     if (isMock) return;
@@ -155,7 +182,7 @@ export default function Dashboard() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h1 style={{ fontSize: 'clamp(18px, 4vw, 22px)', fontWeight: 700, color: '#1e293b' }}>
-            Dashboard
+            Bentornato, {settings?.userName ?? 'Utente'}!
           </h1>
           <p style={{ fontSize: 13, color: '#475569', marginTop: 2 }}>Monitoraggio in tempo reale</p>
         </div>
@@ -380,7 +407,18 @@ function MeteoCard({ data, error }) {
   const weatherIcon = data?.weatherIcon ?? "☁️"
   const lastUpdated = data?.lastUpdated ?? null
 
-  const theme = weatherThemes[weatherText] || weatherThemes.Default
+  const currentHour = new Date().getHours()
+  const isNight = currentHour >= 20 || currentHour < 6
+
+  let displayWeatherText = weatherText
+  let displayWeatherIcon = weatherIcon
+
+  if (weatherText === "Soleggiato" && isNight) {
+    displayWeatherText = "Sereno"
+    displayWeatherIcon = "🌙"
+  }
+
+  const theme = weatherThemes[displayWeatherText] || weatherThemes.Default
 
   return (
     <div className="glass" style={{
@@ -395,7 +433,7 @@ function MeteoCard({ data, error }) {
       <div style={{
         position: 'absolute',
         right: '-15px',
-        bottom: '-25px',
+        bottom: '-8px',
         color: theme.iconColor,
         pointerEvents: 'none',
         transform: 'rotate(-5deg)',
@@ -406,7 +444,7 @@ function MeteoCard({ data, error }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14, position: 'relative', zIndex: 1 }}>
         <div>
           <h2 style={{
-            fontSize: 11, fontWeight: 700, color: '#475569',
+            fontSize: 11, fontWeight: 700, color: theme.isDark ? '#94a3b8' : '#475569',
             textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0
           }}>
             Meteo a Bari
@@ -414,45 +452,45 @@ function MeteoCard({ data, error }) {
           <p style={{
             fontSize: 'clamp(13px, 3.5vw, 15px)',
             fontWeight: 600,
-            color: '#1e293b',
+            color: theme.isDark ? '#f8fafc' : '#1e293b',
             marginTop: 4,
             display: 'flex',
             alignItems: 'center',
             gap: 6
           }}>
-            Oggi è {weatherText.toLowerCase()} <span style={{ fontSize: '1.2em' }}>{weatherIcon}</span>
+            Oggi è {displayWeatherText.toLowerCase()} <span style={{ fontSize: '1.2em' }}>{displayWeatherIcon}</span>
           </p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 4 }}>
           {/* Temperature */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Temp.</span>
-            <span style={{ fontSize: 'clamp(18px, 4.5vw, 24px)', fontWeight: 800, color: '#1e293b' }}>
+            <span style={{ fontSize: 10, fontWeight: 600, color: theme.isDark ? '#94a3b8' : '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Temp.</span>
+            <span style={{ fontSize: 'clamp(18px, 4.5vw, 24px)', fontWeight: 800, color: theme.isDark ? '#f8fafc' : '#1e293b' }}>
               {temp !== null ? `${temp.toFixed(1)}°C` : '--'}
             </span>
           </div>
 
           {/* Humidity */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Umidità</span>
-            <span style={{ fontSize: 'clamp(18px, 4.5vw, 24px)', fontWeight: 800, color: '#0284c7' }}>
+            <span style={{ fontSize: 10, fontWeight: 600, color: theme.isDark ? '#94a3b8' : '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Umidità</span>
+            <span style={{ fontSize: 'clamp(18px, 4.5vw, 24px)', fontWeight: 800, color: theme.isDark ? '#38bdf8' : '#0284c7' }}>
               {humidity !== null ? `${humidity}%` : '--'}
             </span>
           </div>
 
           {/* Wind Speed */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Vento</span>
-            <span style={{ fontSize: 'clamp(18px, 4.5vw, 24px)', fontWeight: 800, color: '#059669' }}>
+            <span style={{ fontSize: 10, fontWeight: 600, color: theme.isDark ? '#94a3b8' : '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Vento</span>
+            <span style={{ fontSize: 'clamp(18px, 4.5vw, 24px)', fontWeight: 800, color: theme.isDark ? '#34d399' : '#059669' }}>
               {windSpeed !== null ? `${windSpeed.toFixed(1)}` : '--'}
-              <span style={{ fontSize: 10, fontWeight: 500, color: '#64748b', marginLeft: 2 }}>km/h</span>
+              <span style={{ fontSize: 10, fontWeight: 500, color: theme.isDark ? '#94a3b8' : '#64748b', marginLeft: 2 }}>km/h</span>
             </span>
           </div>
         </div>
 
         {lastUpdated && (
-          <p style={{ fontSize: 10, color: '#64748b', marginTop: 4, marginBottom: 0 }}>
+          <p style={{ fontSize: 10, color: theme.isDark ? '#94a3b8' : '#64748b', marginTop: 4, marginBottom: 0 }}>
             Ultimo aggiornamento alle {new Date(lastUpdated).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
           </p>
         )}
