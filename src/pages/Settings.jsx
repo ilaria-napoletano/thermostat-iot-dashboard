@@ -19,13 +19,40 @@ export default function Settings() {
       setIsteresi(thermostatData.isteresi)
     }
   }, [thermostatData?.isteresi])
-  const { currentUser, login, logout, loading: authLoading } = useAuth()
+  const { currentUser, login, logout, updateProfile, loading: authLoading } = useAuth()
   
+  const [userName, setUserName] = useState('')
+  const [gender, setGender] = useState('m')
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveSuccess, setSaveSuccess] = useState(false)
+
   // Login states
   const [loginUser, setLoginUser] = useState('')
   const [loginPass, setLoginPass] = useState('')
   const [loginError, setLoginError] = useState('')
   const [isLoggingIn, setIsLoggingIn] = useState(false)
+
+  useEffect(() => {
+    if (currentUser) {
+      if (currentUser.userName) setUserName(currentUser.userName)
+      if (currentUser.gender) setGender(currentUser.gender)
+    }
+  }, [currentUser])
+
+  const handleSaveSettings = async () => {
+    setIsSaving(true)
+    setSaveSuccess(false)
+    try {
+      await updateProfile({ userName, gender })
+      setSaveSuccess(true)
+      setTimeout(() => setSaveSuccess(false), 3000)
+    } catch (err) {
+      console.error('Errore durante il salvataggio:', err)
+      alert('Errore durante il salvataggio: ' + err.message)
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
   const handleIsteresiChange = async (val) => {
     const newVal = Number(val);
@@ -152,7 +179,79 @@ export default function Settings() {
         </div>
       )}
 
+      <div style={{ ...glass, padding: 24, marginBottom: 16 }}>
+        <p style={{
+          fontSize: 11, fontWeight: 700, color: '#64748b',
+          textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16,
+        }}>
+          Preferenze Utente ({currentUser.username})
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <label style={{ fontSize: 13, color: '#475569', fontWeight: 500 }}>Nome Utente (visualizzato in Home)</label>
+            <input 
+              type="text" 
+              value={userName} 
+              onChange={e => setUserName(e.target.value)}
+              placeholder="Inserisci il tuo nome"
+              style={{
+                width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid rgba(0,0,0,0.1)',
+                background: 'rgba(255,255,255,0.8)', fontSize: 14, color: '#1e293b', outline: 'none',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
 
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <label style={{ fontSize: 13, color: '#475569', fontWeight: 500 }}>Formula di Saluto</label>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {[
+                { key: 'm', label: 'Bentornato ♂️' },
+                { key: 'f', label: 'Bentornata ♀️' },
+                { key: 'x', label: 'Bentornatə ⚧️' },
+              ].map(opt => (
+                <button
+                  key={opt.key}
+                  onClick={() => setGender(opt.key)}
+                  style={{
+                    flex: 1,
+                    minWidth: 110,
+                    padding: '10px 14px',
+                    borderRadius: 10,
+                    fontSize: 13,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    background: gender === opt.key ? '#0284c7' : 'rgba(255, 255, 255, 0.4)',
+                    color: gender === opt.key ? 'white' : '#475569',
+                    border: gender === opt.key ? '1px solid #0284c7' : '1px solid rgba(0,0,0,0.08)',
+                  }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
+            <button 
+              onClick={handleSaveSettings}
+              disabled={isMock && false || isSaving || !userName.trim()}
+              style={{
+                padding: '10px 24px', borderRadius: 10, background: '#0284c7', color: 'white',
+                border: 'none', fontWeight: 600, fontSize: 14, cursor: (isSaving || !userName.trim()) ? 'not-allowed' : 'pointer',
+                opacity: (isSaving || !userName.trim()) ? 0.6 : 1, transition: 'all 0.2s',
+                boxShadow: '0 4px 12px rgba(2, 132, 199, 0.15)'
+              }}
+            >
+              {isSaving ? 'Salvataggio...' : 'Salva Impostazioni'}
+            </button>
+          </div>
+          {saveSuccess && (
+            <p style={{ fontSize: 12, color: '#059669', margin: 0, textAlign: 'right' }}>Impostazioni aggiornate con successo!</p>
+          )}
+        </div>
+      </div>
 
       <div style={{ ...glass, padding: 24, marginBottom: 16 }}>
         <p style={{
