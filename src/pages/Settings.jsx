@@ -270,8 +270,8 @@ export default function Settings() {
             </p>
             <input 
               type="range" 
-              min="0.1" 
-              max="0.5" 
+              min="0.2" 
+              max="0.8" 
               step="0.1" 
               value={isteresi} 
               onChange={e => setIsteresi(Number(e.target.value))}
@@ -280,8 +280,8 @@ export default function Settings() {
               style={{ width: '100%', cursor: 'pointer' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#94a3b8' }}>
-              <span>0.1°C</span>
-              <span>0.5°C</span>
+              <span>0.2°C</span>
+              <span>0.8°C</span>
             </div>
           </div>
         </div>
