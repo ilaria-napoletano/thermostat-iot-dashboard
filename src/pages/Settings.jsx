@@ -356,6 +356,20 @@ export default function Settings() {
               <span style={{ fontSize: 14, color: '#1e293b', fontWeight: 600 }}>{name}</span>
             </div>
           ))}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderTop: '1px solid rgba(0,0,0,0.05)',
+            paddingTop: 16,
+            marginTop: 4
+          }}>
+            <img 
+              src="/Logo.png" 
+              alt="TermIoT Logo" 
+              style={{ width: 120, height: 120, objectFit: 'contain' }} 
+            />
+          </div>
         </div>
       </div>
     </div>
