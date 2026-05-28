@@ -40,24 +40,24 @@ export function useThermostat() {
       try {
         const { ref, onValue } = await import('firebase/database')
         const db = await getDb()
-        // Cambiato da 'thermostat' a 'termostato1'
-        const thermostatRef = ref(db, 'termostato1')
+        // Cambiato da 'termostato1' a 'termostato'
+        const thermostatRef = ref(db, 'termostato')
         unsubscribe = onValue(
           thermostatRef,
           snapshot => {
             const val = snapshot.val()
             if (val) {
-              // Mappatura della struttura dati dell'ESP a quella della dashboard
+              // Mappatura della nuova struttura dati dell'ESP a quella della dashboard
               setData({
-                temperature: val.stato?.temperatura ?? null,
-                humidity: val.stato?.umidita ?? null,
-                target: val.config?.soglia ?? null,
-                isteresi: val.config?.isteresi ?? 0.2,
-                isOn: val.stato?.wifi_ok ?? true,
-                mode: val.stato?.uscita === 1 ? 'heating' : 'idle',
-                lastUpdated: val.stato?.timestamp 
-                  ? new Date(val.stato.timestamp).getTime() 
-                  : Date.now()
+                temperature: val.status?.temp ?? val.stato?.temperatura ?? null,
+                humidity: val.status?.hum ?? val.stato?.umidita ?? null,
+                target: val.set_temp ?? val.config?.soglia ?? null,
+                isteresi: val.isteresi ?? val.config?.isteresi ?? 0.2,
+                isOn: val.status?.wifi_ok ?? val.stato?.wifi_ok ?? true,
+                mode: (val.status?.uscita === 1 || val.stato?.uscita === 1) ? 'heating' : 'idle',
+                lastUpdated: val.status?.time 
+                  ? new Date(val.status.time).getTime() 
+                  : (val.stato?.timestamp ? new Date(val.stato.timestamp).getTime() : Date.now())
               })
             }
             setLoading(false)
