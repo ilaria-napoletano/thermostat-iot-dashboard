@@ -198,8 +198,10 @@ export default function Dashboard() {
   const temp = data?.temperature ?? null
   const humidity = data?.humidity ?? null
   const target = data?.target ?? null
-  const mode = data?.mode ?? 'idle'
-  const currentMode = modeInfo[mode] ?? modeInfo.idle
+  const isHeating = data?.isHeating ?? false
+  const currentMode = isHeating 
+    ? { ...modeInfo.heating, label: 'Riscaldamento acceso' } 
+    : { ...modeInfo.idle, label: 'Riscaldamento spento' }
   return (
     <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
