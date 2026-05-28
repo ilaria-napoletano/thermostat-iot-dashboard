@@ -5,18 +5,13 @@ import {
 import { useThermostat } from '../hooks/useThermostat'
 function CustomTooltip({ active, payload, label, unit, color }) {
   if (!active || !payload?.length) return null
-  
-  const timeLabel = typeof label === 'number' 
-    ? new Date(label).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) 
-    : label;
-
   return (
     <div style={{
       background: '#ffffff', border: '1px solid rgba(0,0,0,0.1)',
       borderRadius: 10, padding: '10px 14px', fontSize: 13,
       boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
     }}>
-      <p style={{ color: '#64748b', marginBottom: 4 }}>{timeLabel}</p>
+      <p style={{ color: '#64748b', marginBottom: 4 }}>{label}</p>
       {payload.map((entry, index) => (
         <p key={index} style={{ color: entry.color, fontWeight: 700, fontSize: 16 }}>
           {entry.name}: {entry.value}{entry.name.includes('Temp') ? '°C' : '%'}
@@ -31,7 +26,7 @@ function Chart({ data, dataKey, label, color, unit }) {
     <div className="glass" style={{ padding: '20px 16px 16px' }}>
       <p style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 16, paddingLeft: 4 }}>{label}</p>
       <ResponsiveContainer width="100%" height={180}>
-        <LineChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
+        <LineChart data={data} margin={{ top: 4, right: 8, left: -10, bottom: 0 }}>
           <defs>
             <linearGradient id={`grad-${dataKey}`} x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor={color} stopOpacity={0.3} />
@@ -39,15 +34,7 @@ function Chart({ data, dataKey, label, color, unit }) {
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
-          <XAxis 
-            dataKey="rawTime" 
-            type="number" 
-            domain={['dataMin', 'dataMax']} 
-            tickFormatter={(tick) => new Date(tick).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
-            minTickGap={30} 
-            stroke="transparent" 
-            tick={{ fill: '#475569', fontSize: 10 }} 
-          />
+          <XAxis dataKey="time" tick={{ fill: '#475569', fontSize: 10 }} interval={5} stroke="transparent" />
           <YAxis tick={{ fill: '#475569', fontSize: 10 }} stroke="transparent" domain={['auto', 'auto']} />
           <Tooltip content={<CustomTooltip unit={unit} color={color} />} />
           <Line
