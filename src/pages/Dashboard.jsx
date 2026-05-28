@@ -235,7 +235,7 @@ export default function Dashboard() {
       {/* Stats row */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <StatCard label="Umidità interna" value={humidity !== null ? `${humidity}%` : '--'} sub="Umidità relativa in casa" icon="💧" accent="#0284c7" />
-        <StatCard label="Livello CO" value="--" sub="Monossido di carbonio" icon="💨" accent="#ef4444" />
+        <StatCard label="Rilevazione CO" value="--" sub="Monossido di carbonio" icon="💨" accent="#ef4444" />
       </div>
 
       {/* Unified Meteo Card */}
