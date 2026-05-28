@@ -52,8 +52,8 @@ const routines = [
     colorTo: 'rgba(249, 115, 22, 0.05)',
     onTime: { h: 0, m: 0 },
     offTime: { h: 23, m: 59 },
-    target: 7,
-    desc: "\"Protezione casa e zero sprechi\"\n\nAttiva questa modalità quando parti per i viaggi o ti assenti per molti giorni. Il termostato rimarrà in modalità \"antigelo\" costante (7°C): la caldaia resterà spenta per tutto il tempo, attivandosi solo in caso di freddo estremo per evitare il congelamento delle tubature."
+    target: 10,
+    desc: "\"Protezione casa e zero sprechi\"\n\nAttiva questa modalità quando parti per i viaggi o ti assenti per molti giorni. Il termostato rimarrà in modalità \"antigelo\" costante (10°C): la caldaia resterà spenta per tutto il tempo, attivandosi solo in caso di freddo estremo per evitare il congelamento delle tubature."
   }
 ];
 
