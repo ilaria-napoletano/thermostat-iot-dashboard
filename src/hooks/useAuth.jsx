@@ -13,7 +13,15 @@ async function getFirestoreDb() {
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem('currentUser');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch (e) {
+      console.error('Errore nel recupero sessione:', e);
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,6 +33,7 @@ export function AuthProvider({ children }) {
       if (username === 'test' && password === 'test') {
         const user = { username: 'test', userName: 'Utente Test', gender: 'm' };
         setCurrentUser(user);
+        localStorage.setItem('currentUser', JSON.stringify(user));
         return user;
       }
       throw new Error('Credenziali non valide. (Mock: usa test/test)');
@@ -46,6 +55,7 @@ export function AuthProvider({ children }) {
           gender: data.gender || 'm' 
         };
         setCurrentUser(user);
+        localStorage.setItem('currentUser', JSON.stringify(user));
         return user;
       } else {
         throw new Error('Password errata');
@@ -57,6 +67,7 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     setCurrentUser(null);
+    localStorage.removeItem('currentUser');
   };
 
   const updateProfile = async (updates) => {
@@ -64,6 +75,7 @@ export function AuthProvider({ children }) {
     
     const newUser = { ...currentUser, ...updates };
     setCurrentUser(newUser);
+    localStorage.setItem('currentUser', JSON.stringify(newUser));
 
     if (!USE_MOCK) {
       const { doc, setDoc } = await import('firebase/firestore');
