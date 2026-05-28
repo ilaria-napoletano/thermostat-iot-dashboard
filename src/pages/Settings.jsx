@@ -264,7 +264,7 @@ export default function Settings() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <label style={{ fontSize: 13, color: '#475569', fontWeight: 500 }}>
-              Isteresi: <strong style={{ color: '#0284c7' }}>{isteresi.toFixed(1)}°C</strong>
+              Isteresi: <strong style={{ color: '#2799cd' }}>{isteresi.toFixed(1)}°C</strong>
               {!currentUser && (
                 <span style={{ 
                   color: '#ef4444', 
@@ -296,7 +296,8 @@ export default function Settings() {
               style={{ 
                 width: '100%', 
                 cursor: currentUser ? 'pointer' : 'not-allowed',
-                opacity: currentUser ? 1 : 0.6
+                opacity: currentUser ? 1 : 0.6,
+                accentColor: '#2799cd'
               }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#94a3b8' }}>
