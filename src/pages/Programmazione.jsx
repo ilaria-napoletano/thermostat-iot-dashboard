@@ -128,13 +128,13 @@ export default function Programmazione() {
       {/* Sliders Container */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16, alignItems: 'center' }}>
         <TimeCircularSlider 
-          label="Orario ON" 
+          label="Orario di accensione" 
           initialTime={{ h: parseInt(data?.h1 ?? 0, 10), m: parseInt(data?.m1 ?? 0, 10) }} 
           onTimeRelease={(h, m) => handleTimeChange('on', h, m)}
           disabled={!currentUser}
         />
         <TimeCircularSlider 
-          label="Orario OFF" 
+          label="Orario di spegnimento" 
           initialTime={{ h: parseInt(data?.h2 ?? 0, 10), m: parseInt(data?.m2 ?? 0, 10) }} 
           onTimeRelease={(h, m) => handleTimeChange('off', h, m)}
           disabled={!currentUser}
