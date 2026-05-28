@@ -14,7 +14,7 @@ async function getDb() {
 
 export function useThermostat() {
   const [data, setData] = useState(null)
-  const [history] = useState(() => generateHistoryMock(24))
+  const [history, setHistory] = useState(() => USE_MOCK ? generateHistoryMock(24) : [])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -34,15 +34,19 @@ export function useThermostat() {
       return () => clearInterval(interval)
     }
 
-    let unsubscribe = null
+    let unsubscribeRtdb = null
+    let unsubscribeFirestore = null
 
     async function connect() {
       try {
         const { ref, onValue } = await import('firebase/database')
+        const { collection, query, where, orderBy, onSnapshot, Timestamp } = await import('firebase/firestore')
         const db = await getDb()
-        // Cambiato da 'termostato1' a 'termostato'
+        const { firestoreDb } = await import('../firebase/config')
+        
+        // 1. Lettura dati real-time (RTDB)
         const thermostatRef = ref(db, 'termostato')
-        unsubscribe = onValue(
+        unsubscribeRtdb = onValue(
           thermostatRef,
           snapshot => {
             const val = snapshot.val()
@@ -71,6 +75,31 @@ export function useThermostat() {
             setLoading(false)
           }
         )
+
+        // 2. Lettura dati storici (Firestore) - Ultime 24 ore
+        const twentyFourHoursAgo = Timestamp.fromMillis(Date.now() - 24 * 60 * 60 * 1000)
+        const historyRef = collection(firestoreDb, 'storico_termostato')
+        const q = query(
+          historyRef,
+          where('timestamp', '>=', twentyFourHoursAgo),
+          orderBy('timestamp', 'asc')
+        )
+
+        unsubscribeFirestore = onSnapshot(q, (snapshot) => {
+          const histData = snapshot.docs.map(doc => {
+            const docData = doc.data()
+            const date = docData.timestamp?.toDate() || new Date()
+            return {
+              time: date.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }),
+              temperature: docData.temperature,
+              humidity: docData.humidity
+            }
+          })
+          setHistory(histData)
+        }, err => {
+          console.error("Errore fetch storico:", err)
+        })
+
       } catch (err) {
         setError('Errore configurazione Firebase')
         setLoading(false)
@@ -78,7 +107,10 @@ export function useThermostat() {
     }
 
     connect()
-    return () => unsubscribe?.()
+    return () => {
+      unsubscribeRtdb?.()
+      unsubscribeFirestore?.()
+    }
   }, [])
 
   return { data, history, loading, error, isMock: USE_MOCK }
