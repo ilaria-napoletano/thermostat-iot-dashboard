@@ -56,10 +56,10 @@ export function useThermostat() {
                 isOn: val.status?.wifi_ok ?? true,
                 mode: val.status?.uscita === 1 ? 'heating' : 'idle',
                 lastUpdated: val.status?.time ?? Date.now(),
-                h1: val.h1 ?? 0,
-                m1: val.m1 ?? 0,
-                h2: val.h2 ?? 0,
-                m2: val.m2 ?? 0
+                h1: val.settings?.prog?.h1 ?? 0,
+                m1: val.settings?.prog?.m1 ?? 0,
+                h2: val.settings?.prog?.h2 ?? 0,
+                m2: val.settings?.prog?.m2 ?? 0
               })
             }
             setLoading(false)
