@@ -61,7 +61,7 @@ export default function Settings() {
     try {
       const { ref, set } = await import('firebase/database');
       const { db } = await import('../firebase/config');
-      const targetRef = ref(db, 'termostato/isteresi');
+      const targetRef = ref(db, 'termostato/setting/isteresi');
       await set(targetRef, newVal);
     } catch (err) {
       console.error('Errore durante il salvataggio isteresi:', err);

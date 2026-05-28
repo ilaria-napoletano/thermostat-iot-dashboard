@@ -163,7 +163,7 @@ export default function Dashboard() {
     try {
       const { ref, set } = await import('firebase/database');
       const { db } = await import('../firebase/config');
-      const targetRef = ref(db, 'termostato/set_temp');
+      const targetRef = ref(db, 'termostato/setting/set_temp');
       await set(targetRef, newTarget);
     } catch (err) {
       console.error('Errore durante il salvataggio:', err);
