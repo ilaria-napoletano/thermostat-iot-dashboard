@@ -42,7 +42,7 @@ function Chart({ data, dataKey, label, color, unit }) {
           <XAxis 
             dataKey="rawTime" 
             type="number" 
-            domain={[Date.now() - 86400000, Date.now()]} 
+            domain={['dataMin', 'dataMax']} 
             tickFormatter={(tick) => new Date(tick).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
             minTickGap={30} 
             stroke="transparent" 
