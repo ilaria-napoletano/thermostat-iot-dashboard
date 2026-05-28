@@ -59,10 +59,10 @@ export default function Settings() {
     setIsteresi(newVal);
     if (isMock) return;
     try {
-      const { ref, set } = await import('firebase/database');
+      const { ref, update } = await import('firebase/database');
       const { db } = await import('../firebase/config');
-      const targetRef = ref(db, 'termostato/setting/isteresi');
-      await set(targetRef, newVal);
+      const targetRef = ref(db, 'termostato/setting');
+      await update(targetRef, { isteresi: newVal });
     } catch (err) {
       console.error('Errore durante il salvataggio isteresi:', err);
     }
