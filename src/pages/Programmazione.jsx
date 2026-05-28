@@ -13,35 +13,47 @@ const glass = {
 const routines = [
   {
     id: 'feriali',
-    name: 'Feriali (Il "Rientro Caldo")',
+    name: 'Feriali',
+    emoji: '🏠',
+    colorFrom: 'rgba(250, 204, 21, 0.25)',
+    colorTo: 'rgba(250, 204, 21, 0.05)',
     onTime: { h: 17, m: 0 },
     offTime: { h: 22, m: 30 },
     target: 20,
-    desc: "Concentre l'unica accensione sul momento di massima presenza e relax, ovvero il tardo pomeriggio e la sera. La mattina ci si affida all'inerzia termica della casa o... a un caffè caldo e una vestaglia.\n\nLogica: L'impianto spinge per 5 ore e mezza. Spegnendo alle 22:30, la casa resterà tiepida fino a quando non sarai addormentato. Durante il giorno e la notte il sistema resta in OFF."
+    desc: "\"Il comfort al tuo rientro\"\n\nPensata per chi passa la giornata fuori casa per lavoro o studio. Il riscaldamento si attiva nel tardo pomeriggio per farti trovare la casa calda al tuo rientro e si spegne prima di andare a dormire, ottimizzando i consumi nelle ore in cui la casa è vuota o sei sotto le coperte."
   },
   {
     id: 'festivo',
-    name: 'Festivo (Il "Comfort Prolungato")',
+    name: 'Festivo',
+    emoji: '🛋️',
+    colorFrom: 'rgba(168, 85, 247, 0.25)',
+    colorTo: 'rgba(168, 85, 247, 0.05)',
     onTime: { h: 10, m: 0 },
     offTime: { h: 23, m: 0 },
     target: 19.5,
-    desc: "Nei weekend si passa più tempo in casa, spesso fin dalla mattina. L'unica finestra deve quindi coprire la parte centrale e serale della giornata.\n\nLogica: Una finestra lunga 13 ore. Teniamo la temperatura leggermente più bassa (19.5°C invece di 20°C) per compensare il fatto che l'impianto rimarrà acceso molte ore di fila, evitando impennate in bolletta."
+    desc: "\"Il calore di casa nel weekend\"\n\nDedicata alle giornate di relax in cui la casa è più vissuta. Un'unica grande finestra di accensione che copre la tarda mattina, il pomeriggio e la sera a una temperatura bilanciata. Massimo comfort per tutta la famiglia, senza sprechi nelle ore notturne."
   },
   {
     id: 'eco',
-    name: 'ECO (Il "Mantenimento Minimo")',
+    name: 'ECO',
+    emoji: '🌱',
+    colorFrom: 'rgba(34, 197, 94, 0.25)',
+    colorTo: 'rgba(34, 197, 94, 0.05)',
     onTime: { h: 18, m: 30 },
     offTime: { h: 21, m: 30 },
     target: 18.5,
-    desc: "Se vuoi risparmiare al massimo pur mantenendo la casa abitabile nei feriali, stringiamo la finestra temporale all'essenziale e abbassiamo il target.\n\nLogica: Solo 3 ore di accensione controllata. Giusto il tempo di cenare e rilassarsi un attimo senza congelare, sfruttando il massimo risparmio nelle restanti 21 ore di OFF."
+    desc: "\"Consumi intelligenti, massimo risparmio\"\n\nLa scelta ideale per chi vuole alleggerire la bolletta o per i periodi meno freddi. Questa routine stringe la finestra di accensione all'essenziale (poche ore la sera) e riduce la temperatura di un grado e mezzo. Indossa un maglione leggero e aiuta l'ambiente e il portafoglio."
   },
   {
     id: 'vacanza',
-    name: 'Vacanza (L\' "Antigelo Forzato")',
+    name: 'Vacanza',
+    emoji: '✈️',
+    colorFrom: 'rgba(249, 115, 22, 0.25)',
+    colorTo: 'rgba(249, 115, 22, 0.05)',
     onTime: { h: 0, m: 0 },
     offTime: { h: 23, m: 59 },
     target: 7,
-    desc: "Sfruttiamo un trick di programmazione. Per simulare la modalità vacanza costante devi fare in modo che la temperatura target sia così bassa da non far partire quasi mai la caldaia, ma abbastanza alta da proteggere i tubi.\n\nLogica: Il termostato è costantemente 'in funzione', ma avendo come target 7°C, la caldaia si accenderà soltanto se fuori c'è un'ondata di gelo tale da rischiare di far congelare l'acqua nei tubi dell'intercapedine."
+    desc: "\"Protezione casa e zero sprechi\"\n\nAttiva questa modalità quando parti per i viaggi o ti assenti per molti giorni. Il termostato rimarrà in modalità \"antigelo\" costante (7°C): la caldaia resterà spenta per tutto il tempo, attivandosi solo in caso di freddo estremo per evitare il congelamento delle tubature."
   }
 ];
 
@@ -114,16 +126,16 @@ export default function Programmazione() {
       )}
 
       {/* Sliders Container */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16, alignItems: 'center' }}>
         <TimeCircularSlider 
           label="Orario ON" 
-          initialTime={{ h: data?.h1 ?? 0, m: data?.m1 ?? 0 }} 
+          initialTime={{ h: parseInt(data?.h1 ?? 0, 10), m: parseInt(data?.m1 ?? 0, 10) }} 
           onTimeRelease={(h, m) => handleTimeChange('on', h, m)}
           disabled={!currentUser}
         />
         <TimeCircularSlider 
           label="Orario OFF" 
-          initialTime={{ h: data?.h2 ?? 0, m: data?.m2 ?? 0 }} 
+          initialTime={{ h: parseInt(data?.h2 ?? 0, 10), m: parseInt(data?.m2 ?? 0, 10) }} 
           onTimeRelease={(h, m) => handleTimeChange('off', h, m)}
           disabled={!currentUser}
         />
@@ -138,16 +150,21 @@ export default function Programmazione() {
           Routine Preimpostate
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {routines.map(rt => (
-            <RoutineCard key={rt.id} routine={rt} onApply={() => applyRoutine(rt)} disabled={!currentUser} />
-          ))}
+          {routines.map(rt => {
+            const isActive = parseInt(data?.h1, 10) === rt.onTime.h && parseInt(data?.m1, 10) === rt.onTime.m &&
+                             parseInt(data?.h2, 10) === rt.offTime.h && parseInt(data?.m2, 10) === rt.offTime.m &&
+                             Number(data?.target) === rt.target;
+            return (
+              <RoutineCard key={rt.id} routine={rt} onApply={() => applyRoutine(rt)} disabled={!currentUser} isActive={isActive} />
+            )
+          })}
         </div>
       </div>
     </div>
   )
 }
 
-function RoutineCard({ routine, onApply, disabled }) {
+function RoutineCard({ routine, onApply, disabled, isActive }) {
   const [showInfo, setShowInfo] = useState(false);
   
   const pad = (n) => n.toString().padStart(2, '0');
@@ -156,7 +173,7 @@ function RoutineCard({ routine, onApply, disabled }) {
 
   return (
     <div style={{ 
-      background: 'rgba(255, 255, 255, 0.4)', 
+      background: `linear-gradient(to right, ${routine.colorFrom}, ${routine.colorTo})`, 
       borderRadius: 12, 
       border: '1px solid rgba(0,0,0,0.05)',
       overflow: 'hidden'
@@ -168,7 +185,7 @@ function RoutineCard({ routine, onApply, disabled }) {
         gap: 12
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <span style={{ fontSize: 14, fontWeight: 600, color: '#1e293b' }}>{routine.name}</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: '#1e293b' }}>{routine.emoji} {routine.name}</span>
           <span style={{ fontSize: 12, color: '#64748b' }}>
             ON: <strong>{onStr}</strong> | OFF: <strong>{offStr}</strong> | Target: <strong>{routine.target}°C</strong>
           </span>
@@ -177,24 +194,24 @@ function RoutineCard({ routine, onApply, disabled }) {
           <button 
             onClick={() => setShowInfo(!showInfo)}
             style={{ 
-              background: showInfo ? 'rgba(2, 132, 199, 0.1)' : 'transparent', border: 'none', cursor: 'pointer',
-              fontSize: 16, color: '#0284c7', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'transparent', border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
               width: 32, height: 32, borderRadius: '50%'
             }}
             title="Informazioni routine"
           >
-            ℹ️
+            <div style={{ width: 22, height: 22, borderRadius: '50%', border: '2px solid #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontWeight: 'bold', fontSize: 12, fontStyle: 'italic', fontFamily: 'serif' }}>i</div>
           </button>
           <button 
             onClick={onApply}
             disabled={disabled}
             style={{
-              background: '#0284c7', color: 'white', border: 'none', borderRadius: 8,
+              background: isActive ? '#22c55e' : '#0284c7', color: 'white', border: 'none', borderRadius: 8,
               padding: '8px 16px', fontSize: 12, fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer',
-              opacity: disabled ? 0.6 : 1, transition: 'all 0.2s', boxShadow: '0 2px 8px rgba(2, 132, 199, 0.2)'
+              opacity: disabled ? 0.6 : 1, transition: 'all 0.2s', boxShadow: isActive ? '0 2px 8px rgba(34, 197, 94, 0.3)' : '0 2px 8px rgba(2, 132, 199, 0.2)'
             }}
           >
-            Attiva
+            {isActive ? 'Attivata' : 'Attiva'}
           </button>
         </div>
       </div>
