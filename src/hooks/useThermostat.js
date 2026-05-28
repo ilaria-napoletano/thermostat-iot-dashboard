@@ -55,9 +55,7 @@ export function useThermostat() {
                 isteresi: val.isteresi ?? 0.2,
                 isOn: val.status?.wifi_ok ?? true,
                 mode: val.status?.uscita === 1 ? 'heating' : 'idle',
-                lastUpdated: val.status?.time 
-                  ? new Date(val.status.time).getTime() 
-                  : Date.now()
+                lastUpdated: val.status?.time ?? Date.now()
               })
             }
             setLoading(false)
