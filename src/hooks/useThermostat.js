@@ -51,15 +51,15 @@ export function useThermostat() {
               setData({
                 temperature: val.status?.temp ?? null,
                 humidity: val.status?.hum ?? null,
-                target: val.setting?.set_temp ?? val.settings?.set_temp ?? val.set_temp ?? null,
-                isteresi: val.setting?.isteresi ?? val.settings?.isteresi ?? val.isteresi ?? 0.2,
+                target: val.settings?.set_temp ?? val.setting?.set_temp ?? val.set_temp ?? null,
+                isteresi: val.settings?.isteresi ?? val.setting?.isteresi ?? val.isteresi ?? 0.2,
                 isOn: val.status?.wifi_ok ?? true,
                 mode: val.status?.uscita === 1 ? 'heating' : 'idle',
                 lastUpdated: val.status?.time ?? Date.now(),
-                h1: val.setting?.prog?.h1 ?? val.settings?.prog?.h1 ?? val.h1 ?? 0,
-                m1: val.setting?.prog?.m1 ?? val.settings?.prog?.m1 ?? val.m1 ?? 0,
-                h2: val.setting?.prog?.h2 ?? val.settings?.prog?.h2 ?? val.h2 ?? 0,
-                m2: val.setting?.prog?.m2 ?? val.settings?.prog?.m2 ?? val.m2 ?? 0
+                h1: val.settings?.prog?.h1 ?? val.setting?.prog?.h1 ?? val.h1 ?? 0,
+                m1: val.settings?.prog?.m1 ?? val.setting?.prog?.m1 ?? val.m1 ?? 0,
+                h2: val.settings?.prog?.h2 ?? val.setting?.prog?.h2 ?? val.h2 ?? 0,
+                m2: val.settings?.prog?.m2 ?? val.setting?.prog?.m2 ?? val.m2 ?? 0
               })
             }
             setLoading(false)

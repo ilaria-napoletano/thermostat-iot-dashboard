@@ -66,7 +66,7 @@ export default function Programmazione() {
     try {
       const { ref, update } = await import('firebase/database');
       const { db } = await import('../firebase/config');
-      const targetRef = ref(db, 'termostato/setting/prog');
+      const targetRef = ref(db, 'termostato/settings/prog');
       if (type === 'on') {
         await update(targetRef, { h1: h, m1: m });
       } else {
@@ -87,11 +87,11 @@ export default function Programmazione() {
       const { ref, update } = await import('firebase/database');
       const { db } = await import('../firebase/config');
       const updates = {
-        'termostato/setting/prog/h1': routine.onTime.h,
-        'termostato/setting/prog/m1': routine.onTime.m,
-        'termostato/setting/prog/h2': routine.offTime.h,
-        'termostato/setting/prog/m2': routine.offTime.m,
-        'termostato/setting/set_temp': routine.target
+        'termostato/settings/prog/h1': routine.onTime.h,
+        'termostato/settings/prog/m1': routine.onTime.m,
+        'termostato/settings/prog/h2': routine.offTime.h,
+        'termostato/settings/prog/m2': routine.offTime.m,
+        'termostato/settings/set_temp': routine.target
       };
       await update(ref(db), updates);
       alert(`Routine "${routine.name}" applicata con successo!`);
