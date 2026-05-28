@@ -200,26 +200,6 @@ export default function Dashboard() {
   const target = data?.target ?? null
   const mode = data?.mode ?? 'idle'
   const currentMode = modeInfo[mode] ?? modeInfo.idle
-
-  const formatLastUpdated = (val) => {
-    if (!val) return '';
-    if (typeof val === 'number') {
-      return new Date(val).toLocaleTimeString('it-IT');
-    }
-    const num = Number(val);
-    if (!isNaN(num) && num > 0) {
-      return new Date(num).toLocaleTimeString('it-IT');
-    }
-    if (typeof val === 'string' && val.includes(':')) {
-      return val;
-    }
-    const d = new Date(val);
-    if (!isNaN(d.getTime())) {
-      return d.toLocaleTimeString('it-IT');
-    }
-    return String(val);
-  }
-
   return (
     <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
@@ -262,7 +242,7 @@ export default function Dashboard() {
 
       {data?.lastUpdated && (
         <p style={{ textAlign: 'center', fontSize: 12, color: '#334155' }}>
-          Termostato aggiornato: {formatLastUpdated(data.lastUpdated)}
+          Termostato aggiornato: {data.lastUpdated}
         </p>
       )}
     </div>
