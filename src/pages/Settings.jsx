@@ -317,7 +317,7 @@ export default function Settings() {
         {[
           ['Versione app', '1.0.0'],
           ['Fonte dati', isMock ? 'Demo (simulato)' : 'Firebase Realtime DB'],
-          ['Progetto Firebase', 'esp8266-prova1'],
+          ['Database', 'TermIoT-DB'],
         ].map(([k, v]) => (
           <div key={k} style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -327,6 +327,35 @@ export default function Settings() {
             <span style={{ fontSize: 14, color: '#1e293b', fontWeight: 600, textAlign: 'right', maxWidth: '55%' }}>{v}</span>
           </div>
         ))}
+      </div>
+
+      <div style={{ ...glass, padding: 24, marginTop: 16 }}>
+        <p style={{
+          fontSize: 11, fontWeight: 700, color: '#64748b',
+          textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16,
+        }}>
+          Team di Sviluppo
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {[
+            'Ilaria Napoletano',
+            'Simone Randino',
+            'Daniele Moraglia',
+            'Emanuele Vita'
+          ].map((name, index) => (
+            <div key={name} style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              borderTop: index > 0 ? '1px solid rgba(0,0,0,0.05)' : 'none',
+              paddingTop: index > 0 ? 12 : 0,
+            }}>
+              <span style={{ 
+                width: 8, height: 8, borderRadius: '50%', 
+                background: '#0284c7', display: 'inline-block' 
+              }} />
+              <span style={{ fontSize: 14, color: '#1e293b', fontWeight: 600 }}>{name}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
