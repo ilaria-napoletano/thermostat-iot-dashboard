@@ -10,8 +10,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Thermostat IoT Dashboard',
-        short_name: 'Thermostat',
+        name: 'TermIoT',
+        short_name: 'TermIoT',
         description: 'Real-time thermostat monitoring dashboard',
         theme_color: '#1e293b',
         background_color: '#0f172a',

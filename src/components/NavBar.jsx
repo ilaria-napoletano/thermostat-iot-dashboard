@@ -26,14 +26,26 @@ export default function NavBar() {
           justifyContent: 'space-between',
           height: 64,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 8,
+            background: 'rgba(255, 255, 255, 0.9)',
+            padding: '6px 14px',
+            borderRadius: '9999px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+            backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(255, 255, 255, 0.4)'
+          }}>
             <img 
-              src="/logo.png" 
-              alt="Thermostat-IoT Logo" 
-              style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'contain' }} 
+              src="/scontornatoLOGO.png" 
+              alt="TermIoT Logo" 
+              style={{ width: 28, height: 28, objectFit: 'contain' }} 
             />
-            <span style={{ fontWeight: 700, fontSize: 18, color: '#ffffff', letterSpacing: '-0.3px' }}>
-              Thermostat-IoT
+            <span style={{ fontWeight: 800, fontSize: 18, letterSpacing: '-0.5px', display: 'flex', alignItems: 'center' }}>
+              <span style={{ color: '#1e293b' }}>Term</span>
+              <span style={{ color: '#2799cd' }}>Io</span>
+              <span style={{ color: '#ef4444' }}>T</span>
             </span>
           </div>
 
