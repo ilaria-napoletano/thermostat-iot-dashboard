@@ -26,7 +26,8 @@ async function syncData() {
     const hum = status.hum !== undefined ? status.hum : null;
     // Ensure timestamp is a valid number, otherwise fallback to current time
     const parsedTime = Number(status.time);
-    const validTimestamp = (!isNaN(parsedTime) && parsedTime > 0) ? parsedTime : Date.now();
+    const timeInMillis = (parsedTime > 0 && parsedTime < 1e11) ? parsedTime * 1000 : parsedTime;
+    const validTimestamp = (!isNaN(timeInMillis) && timeInMillis > 0) ? timeInMillis : Date.now();
 
     const telemetryData = {
       temperature: temp,
