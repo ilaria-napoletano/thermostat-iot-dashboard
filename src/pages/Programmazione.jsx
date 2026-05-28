@@ -77,6 +77,21 @@ export default function Programmazione() {
     }
   }
 
+  const handleModeChange = async (newMode) => {
+    if (!currentUser) return;
+    if (isMock) {
+      alert("Sei in modalità demo, la modalità non verrà salvata.");
+      return;
+    }
+    try {
+      const { ref, update } = await import('firebase/database');
+      const { db } = await import('../firebase/config');
+      await update(ref(db, 'termostato/settings'), { mode: newMode });
+    } catch (err) {
+      console.error('Errore cambio modalità:', err);
+    }
+  }
+
   const applyRoutine = async (routine) => {
     if (!currentUser) return;
     if (isMock) {
@@ -124,6 +139,51 @@ export default function Programmazione() {
           Accedi per modificare la programmazione e le routine.
         </div>
       )}
+
+      {/* Mode Selector */}
+      <div style={{ ...glass, padding: 16, display: 'flex', gap: 12, justifyContent: 'space-between', flexWrap: 'wrap' }}>
+        {[
+          { id: 1, label: 'Acceso', color: '#10b981' },
+          { id: 0, label: 'Spento', color: '#ef4444' },
+          { id: 2, label: 'Programmato', color: '#3b82f6' }
+        ].map(modeOpt => {
+          const isActive = data?.systemMode === modeOpt.id;
+          return (
+            <button
+              key={modeOpt.id}
+              onClick={() => handleModeChange(modeOpt.id)}
+              disabled={!currentUser}
+              style={{
+                flex: 1,
+                minWidth: '100px',
+                padding: '12px 8px',
+                borderRadius: 12,
+                border: 'none',
+                background: isActive ? modeOpt.color : 'rgba(255,255,255,0.5)',
+                color: isActive ? '#fff' : '#64748b',
+                fontWeight: 600,
+                fontSize: 14,
+                cursor: currentUser ? 'pointer' : 'not-allowed',
+                boxShadow: isActive ? `0 4px 12px ${modeOpt.color}66` : 'none',
+                transition: 'all 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                opacity: (!currentUser) ? 0.6 : 1
+              }}
+            >
+              <div style={{
+                width: 10, height: 10, borderRadius: '50%',
+                background: isActive ? '#fff' : '#cbd5e1',
+                boxShadow: isActive ? '0 0 8px #fff' : 'none',
+                transition: 'all 0.2s'
+              }} />
+              {modeOpt.label}
+            </button>
+          )
+        })}
+      </div>
 
       {/* Sliders Container */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16, alignItems: 'center' }}>
