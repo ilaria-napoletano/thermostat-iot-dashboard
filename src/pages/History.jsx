@@ -26,7 +26,7 @@ function Chart({ data, dataKey, label, color, unit }) {
     <div className="glass" style={{ padding: '20px 16px 16px' }}>
       <p style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 16, paddingLeft: 4 }}>{label}</p>
       <ResponsiveContainer width="100%" height={180}>
-        <LineChart data={data} margin={{ top: 4, right: 8, left: -10, bottom: 0 }}>
+        <LineChart data={data} margin={{ top: 4, right: 30, left: -10, bottom: 0 }}>
           <defs>
             <linearGradient id={`grad-${dataKey}`} x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor={color} stopOpacity={0.3} />
