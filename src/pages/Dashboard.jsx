@@ -251,6 +251,7 @@ export default function Dashboard() {
 }
 
 function CircularSlider({ currentTemp, initialTarget, onTargetRelease, currentMode }) {
+  const { currentUser } = useAuth();
   const [target, setTarget] = useState(initialTarget || 21);
   const svgRef = useRef(null);
 
@@ -286,12 +287,14 @@ function CircularSlider({ currentTemp, initialTarget, onTargetRelease, currentMo
   };
 
   const handlePointerDown = (e) => {
+    if (!currentUser) return;
     e.target.setPointerCapture(e.pointerId);
     const newVal = calculateValue(e.clientX, e.clientY);
     setTarget(newVal);
   };
 
   const handlePointerMove = (e) => {
+    if (!currentUser) return;
     if (e.buttons > 0) {
       const newVal = calculateValue(e.clientX, e.clientY);
       if (newVal !== target) {
@@ -301,6 +304,7 @@ function CircularSlider({ currentTemp, initialTarget, onTargetRelease, currentMo
   };
 
   const handlePointerUp = (e) => {
+    if (!currentUser) return;
     e.target.releasePointerCapture(e.pointerId);
     if (onTargetRelease && target !== initialTarget) {
       onTargetRelease(target);
@@ -327,7 +331,7 @@ function CircularSlider({ currentTemp, initialTarget, onTargetRelease, currentMo
   const progressPath = valAngle === startAngle ? "" : `M ${startPt.x} ${startPt.y} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${valPt.x} ${valPt.y}`;
 
   return (
-    <div className="glass glow-blue" style={{
+    <div className={`glass ${currentUser ? 'glow-blue' : ''}`} style={{
       padding: 'clamp(20px, 5vw, 36px) clamp(20px, 5vw, 36px) clamp(12px, 3vw, 16px)',
       textAlign: 'center',
       background: 'rgba(255, 255, 255, 0.45)',
@@ -341,9 +345,28 @@ function CircularSlider({ currentTemp, initialTarget, onTargetRelease, currentMo
         fontSize: 11, fontWeight: 700, letterSpacing: '0.12em',
         color: '#64748b', textTransform: 'uppercase', marginBottom: 14,
         alignSelf: 'center',
-        width: '100%'
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        gap: 8
       }}>
-        Regolazione Termostato
+        <span>Regolazione Termostato</span>
+        {!currentUser && (
+          <span style={{ 
+            color: '#ef4444', 
+            fontSize: 10, 
+            fontWeight: 600, 
+            padding: '2px 8px',
+            background: 'rgba(239, 68, 68, 0.1)',
+            borderRadius: '6px',
+            textTransform: 'none',
+            letterSpacing: 'normal'
+          }}>
+            Accedi per modificare
+          </span>
+        )}
       </p>
 
       <div style={{ position: 'relative', width: '100%', maxWidth: '300px', margin: '0 auto' }}>
@@ -360,13 +383,13 @@ function CircularSlider({ currentTemp, initialTarget, onTargetRelease, currentMo
           
           {/* Progress */}
           {progressPath && (
-            <path d={progressPath} fill="none" stroke="#0ea5e9" strokeWidth="18" strokeLinecap="round" 
+            <path d={progressPath} fill="none" stroke={currentUser ? "#0ea5e9" : "#cbd5e1"} strokeWidth="18" strokeLinecap="round" 
               style={{ transition: 'stroke-dasharray 0.1s' }} />
           )}
           
           {/* Knob */}
-          <circle cx={valPt.x} cy={valPt.y} r="14" fill="#fff" stroke="#0284c7" strokeWidth="4" 
-            style={{ cursor: 'grab', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }} />
+          <circle cx={valPt.x} cy={valPt.y} r="14" fill="#fff" stroke={currentUser ? "#0284c7" : "#94a3b8"} strokeWidth="4" 
+            style={{ cursor: currentUser ? 'grab' : 'not-allowed', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }} />
         </svg>
 
         <div style={{
@@ -389,7 +412,7 @@ function CircularSlider({ currentTemp, initialTarget, onTargetRelease, currentMo
           {/* Target & Status */}
           <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
             <span style={{ fontSize: 14, color: '#475569', fontWeight: 400 }}>
-              Target: <strong style={{ color: '#0ea5e9', fontWeight: 600 }}>{target.toFixed(1)}°C</strong>
+              Target: <strong style={{ color: currentUser ? '#0ea5e9' : '#94a3b8', fontWeight: 600 }}>{target.toFixed(1)}°C</strong>
             </span>
             <span style={{
               fontSize: 12, fontWeight: 400,
