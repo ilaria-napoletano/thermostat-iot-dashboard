@@ -212,7 +212,8 @@ export default function Programmazione() {
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {routines.map(rt => {
-            const isActive = parseInt(data?.h1, 10) === rt.onTime.h && parseInt(data?.m1, 10) === rt.onTime.m &&
+            const isActive = data?.systemMode === 2 &&
+                             parseInt(data?.h1, 10) === rt.onTime.h && parseInt(data?.m1, 10) === rt.onTime.m &&
                              parseInt(data?.h2, 10) === rt.offTime.h && parseInt(data?.m2, 10) === rt.offTime.m &&
                              Number(data?.target) === rt.target;
             return (
