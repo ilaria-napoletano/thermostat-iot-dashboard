@@ -49,15 +49,15 @@ export function useThermostat() {
             if (val) {
               // Mappatura della nuova struttura dati dell'ESP a quella della dashboard
               setData({
-                temperature: val.status?.temp ?? val.stato?.temperatura ?? null,
-                humidity: val.status?.hum ?? val.stato?.umidita ?? null,
-                target: val.set_temp ?? val.config?.soglia ?? null,
-                isteresi: val.isteresi ?? val.config?.isteresi ?? 0.2,
-                isOn: val.status?.wifi_ok ?? val.stato?.wifi_ok ?? true,
-                mode: (val.status?.uscita === 1 || val.stato?.uscita === 1) ? 'heating' : 'idle',
+                temperature: val.status?.temp ?? null,
+                humidity: val.status?.hum ?? null,
+                target: val.set_temp ?? null,
+                isteresi: val.isteresi ?? 0.2,
+                isOn: val.status?.wifi_ok ?? true,
+                mode: val.status?.uscita === 1 ? 'heating' : 'idle',
                 lastUpdated: val.status?.time 
                   ? new Date(val.status.time).getTime() 
-                  : (val.stato?.timestamp ? new Date(val.stato.timestamp).getTime() : Date.now())
+                  : Date.now()
               })
             }
             setLoading(false)
