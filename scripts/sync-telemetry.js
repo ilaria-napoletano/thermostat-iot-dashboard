@@ -24,13 +24,14 @@ async function syncData() {
 
     const temp = status.temp !== undefined ? status.temp : null;
     const hum = status.hum !== undefined ? status.hum : null;
-    // Use the timestamp from the device if available, otherwise use current time
-    const timestamp = status.time || Date.now();
+    // Ensure timestamp is a valid number, otherwise fallback to current time
+    const parsedTime = Number(status.time);
+    const validTimestamp = (!isNaN(parsedTime) && parsedTime > 0) ? parsedTime : Date.now();
 
     const telemetryData = {
       temperature: temp,
       humidity: hum,
-      timestamp: admin.firestore.Timestamp.fromMillis(timestamp),
+      timestamp: admin.firestore.Timestamp.fromMillis(validTimestamp),
       syncedAt: admin.firestore.FieldValue.serverTimestamp()
     };
 
