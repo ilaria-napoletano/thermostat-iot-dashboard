@@ -106,7 +106,8 @@ export default function Programmazione() {
         'termostato/settings/prog/m1': routine.onTime.m,
         'termostato/settings/prog/h2': routine.offTime.h,
         'termostato/settings/prog/m2': routine.offTime.m,
-        'termostato/settings/set_temp': routine.target
+        'termostato/settings/set_temp': routine.target,
+        'termostato/settings/mode': 2
       };
       await update(ref(db), updates);
       alert(`Routine "${routine.name}" applicata con successo!`);
