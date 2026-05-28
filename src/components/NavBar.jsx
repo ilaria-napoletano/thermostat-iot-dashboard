@@ -38,7 +38,7 @@ export default function NavBar() {
             border: '1px solid rgba(255, 255, 255, 0.4)'
           }}>
             <img 
-              src="/scontornatoLOGO.png" 
+              src="/LogoSolo.png" 
               alt="TermIoT Logo" 
               style={{ width: 28, height: 28, objectFit: 'contain' }} 
             />
