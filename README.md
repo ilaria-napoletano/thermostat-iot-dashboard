@@ -57,7 +57,8 @@ Apri il browser su: **http://localhost:5173**
 |---|---|
 | **Dashboard** | Temperatura e umidità in tempo reale |
 | **Storico** | Grafici delle ultime 24 ore |
-| **Impostazioni** | Temperatura target e info app |
+| **Programmazione** | Gestione della modalità (Acceso, Spento, Programmato), impostazione degli orari tramite innovativi slider circolari e selezione di routine climatiche preimpostate (Feriali, Festivo, ECO, Vacanza) con dettagli descrittivi a comparsa |
+| **Impostazioni** | Temperatura target, isteresi, preferenze utente, dettagli sul Team di Sviluppo con logo ingrandito e pop-up informativo di presentazione del progetto |
 | **Stato** | Diagnostica connessione Firebase |
 
 ---
@@ -84,4 +85,15 @@ Il progetto include uno script (`meteo-firebase/fetch_data.js`) che scarica il m
 4. Nome: `FIREBASE_SERVICE_ACCOUNT`
 5. Valore: Incolla l'intero contenuto del tuo file `serviceAccountKey.json`.
 6. Clicca **Add secret**.
+
+---
+
+## Funzionalità Progressive Web App (PWA)
+
+TermIoT è configurato come una **Progressive Web App (PWA)** tramite `vite-plugin-pwa`. Questo permette di installare la dashboard direttamente sulla schermata Home del proprio dispositivo mobile (iOS o Android) o desktop come se fosse un'applicazione nativa.
+
+Le caratteristiche principali includono:
+- **Service Worker (`sw.js`)**: Generato automaticamente in fase di build per gestire la cache delle risorse e garantire un avvio istantaneo.
+- **Supporto iOS (iPhone/iPad)**: Aggiunta un'icona specifica ad alta risoluzione con sfondo bianco (`apple-touch-icon.png` in `public/`) inserita tramite il tag `<link rel="apple-touch-icon">` in `index.html`. Questa evita sfondi neri sgradevoli dovuti alle trasparenze sui dispositivi Apple.
+- **Supporto Android & Altri Browser**: Configurazione completa delle icone standard (`icon-192.png` e `icon-512.png`) all'interno del file di manifest per assicurare la massima compatibilità e la corretta visualizzazione dell'icona durante l'installazione.
 

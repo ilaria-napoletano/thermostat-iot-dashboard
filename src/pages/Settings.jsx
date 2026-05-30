@@ -10,6 +10,21 @@ const glass = {
   boxShadow: '0 8px 32px rgba(15, 23, 42, 0.04)',
 }
 
+const PROJECT_DESCRIPTION = `TermIoT nasce dall’esigenza di rendere accessibili le funzionalità della domotica moderna anche a chi dispone di impianti di riscaldamento tradizionali. Il progetto si colloca nella fascia delle soluzioni smart a basso costo, con l’obiettivo di offrire un sistema semplice, affidabile e facilmente installabile senza la necessità di interventi invasivi sull’impianto esistente.
+
+Sviluppato nell’ambito del corso di Laboratorio di programmazione di Sistemi Embedded e Mobile del Politecnico di Bari, tenuto dal Prof. Fiore, TermIoT rappresenta un progetto realizzato dagli studenti Napoletano Ilaria, Randino Simone, Moraglia Daniele, Vita Emanuele, con finalità didattiche e sperimentali, nato dalla volontà di applicare concretamente le tecnologie IoT (Internet of Things) a un problema reale e diffuso: il controllo intelligente della temperatura domestica.
+
+L’architettura del sistema integra un dispositivo embedded basato su microcontrollore ESP32, sensori, connettività Wi-Fi e servizi cloud, consentendo il monitoraggio in tempo reale delle condizioni ambientali, la configurazione dei parametri di funzionamento e la gestione remota dell’impianto attraverso una semplice interfaccia web.
+
+L’obiettivo principale del progetto è permettere la conversione di un comune impianto di riscaldamento tradizionale in un sistema moderno e connesso, introducendo funzionalità quali il controllo remoto, la programmazione oraria e il monitoraggio continuo della temperatura. A differenza di molte soluzioni professionali presenti sul mercato, TermIoT non richiede la presenza di linee bus domotiche, risultando quindi compatibile con la maggior parte delle abitazioni esistenti e riducendo significativamente i costi di installazione.
+
+Oltre agli aspetti funzionali, particolare attenzione è stata dedicata alla semplicità d’uso, all’affidabilità delle comunicazioni, alla solidità del sistema in caso di perdita di connessione o alimentazione e alla possibilità di espansione futura del sistema. La presenza di un display touch da 4 pollici consente infatti un’interazione intuitiva e immediata con il dispositivo, rappresentando uno degli elementi distintivi del progetto e contribuendo a migliorare sensibilmente l’esperienza utente, la stessa attenzione all’intuitività e semplicità è stata posta nello sviluppo della GUI web. 
+
+Pur trattandosi di un prototipo funzionante, TermIoT presenta ampi margini di evoluzione. Tra gli sviluppi futuri più interessanti si possono citare: la miniaturizzazione dell’elettronica, la ottimizzazione della scheda, la riduzione dei consumi energetici, il miglioramento dell’efficienza computazionale e l’introduzione di sistemi di alimentazione di backup in grado di garantire il mantenimento di tutte le funzionalità anche in caso di interruzione dell’alimentazione elettrica.
+
+Tali evoluzioni richiederebbero ulteriori risorse, tempo di sviluppo e competenze. Tuttavia, l’architettura adottata e i risultati ottenuti dimostrano che questi miglioramenti sono concretamente perseguibili e potrebbero portare TermIoT a un livello superiore di maturità tecnologica, avvicinandolo ulteriormente agli standard dei prodotti commerciali mantenendo al contempo la filosofia di accessibilità, economicità e semplicità che ne ha stimolato la realizzazione.`
+
+
 export default function Settings() {
   const { isMock, data: thermostatData } = useThermostat()
   const [isteresi, setIsteresi] = useState(0.2)
@@ -25,6 +40,7 @@ export default function Settings() {
   const [gender, setGender] = useState('m')
   const [isSaving, setIsSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
+  const [showInfo, setShowInfo] = useState(false)
 
   // Login states
   const [loginUser, setLoginUser] = useState('')
@@ -331,12 +347,25 @@ export default function Settings() {
       </div>
 
       <div style={{ ...glass, padding: 24, marginTop: 16 }}>
-        <p style={{
-          fontSize: 11, fontWeight: 700, color: '#64748b',
-          textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16,
-        }}>
-          Team di Sviluppo
-        </p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <p style={{
+            fontSize: 11, fontWeight: 700, color: '#64748b',
+            textTransform: 'uppercase', letterSpacing: '0.1em', margin: 0,
+          }}>
+            Team di Sviluppo
+          </p>
+          <button 
+            onClick={() => setShowInfo(!showInfo)}
+            style={{ 
+              background: 'transparent', border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: 32, height: 32, borderRadius: '50%'
+            }}
+            title="Informazioni progetto"
+          >
+            <div style={{ width: 22, height: 22, borderRadius: '50%', border: '2px solid #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontWeight: 'bold', fontSize: 12, fontStyle: 'italic', fontFamily: 'serif' }}>i</div>
+          </button>
+        </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {[
             'Ilaria Napoletano',
@@ -367,9 +396,20 @@ export default function Settings() {
             <img 
               src="/Logo.png" 
               alt="TermIoT Logo" 
-              style={{ width: 120, height: 120, objectFit: 'contain' }} 
+              style={{ width: 150, height: 150, objectFit: 'contain' }} 
             />
           </div>
+          {showInfo && (
+            <div style={{ 
+              padding: '16px', background: 'rgba(2, 132, 199, 0.03)', 
+              borderRadius: 12,
+              border: '1px solid rgba(2, 132, 199, 0.08)',
+              fontSize: 13, color: '#334155', lineHeight: 1.6, whiteSpace: 'pre-line',
+              marginTop: 12, textAlign: 'justify'
+            }}>
+              {PROJECT_DESCRIPTION}
+            </div>
+          )}
         </div>
       </div>
     </div>
