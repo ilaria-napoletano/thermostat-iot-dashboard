@@ -90,6 +90,7 @@ export function useThermostat() {
             const date = docData.timestamp?.toDate() || new Date()
             return {
               time: date.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }),
+              date: date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' }),
               temperature: docData.temperature,
               humidity: docData.humidity,
               rawTime: date.getTime()

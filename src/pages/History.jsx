@@ -5,13 +5,16 @@ import {
 import { useThermostat } from '../hooks/useThermostat'
 function CustomTooltip({ active, payload, label, unit, color }) {
   if (!active || !payload?.length) return null
+  const itemDate = payload[0].payload.date
   return (
     <div style={{
       background: '#ffffff', border: '1px solid rgba(0,0,0,0.1)',
       borderRadius: 10, padding: '10px 14px', fontSize: 13,
       boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
     }}>
-      <p style={{ color: '#64748b', marginBottom: 4 }}>{label}</p>
+      <p style={{ color: '#64748b', marginBottom: 4, fontWeight: 600 }}>
+        {itemDate ? `${itemDate} alle ` : ''}{label}
+      </p>
       {payload.map((entry, index) => (
         <p key={index} style={{ color: entry.color, fontWeight: 700, fontSize: 16 }}>
           {entry.name}: {entry.value}{entry.name.includes('Temp') ? '°C' : '%'}
