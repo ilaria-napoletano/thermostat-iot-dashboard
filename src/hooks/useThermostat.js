@@ -40,7 +40,7 @@ export function useThermostat() {
     async function connect() {
       try {
         const { ref, onValue } = await import('firebase/database')
-        const { collection, query, where, orderBy, onSnapshot, Timestamp } = await import('firebase/firestore')
+        const { collection, query, where, orderBy, limit, onSnapshot, Timestamp } = await import('firebase/firestore')
         const db = await getDb()
         const { firestoreDb } = await import('../firebase/config')
         
@@ -76,13 +76,12 @@ export function useThermostat() {
           }
         )
 
-        // 2. Lettura dati storici (Firestore) - Ultime 24 ore
-        const twentyFourHoursAgo = Timestamp.fromMillis(Date.now() - 24 * 60 * 60 * 1000)
+        // 2. Lettura dati storici (Firestore) - Ultimi 288 record (pari a 24 ore se campionati ogni 5 min)
         const historyRef = collection(firestoreDb, 'storico_termostato')
         const q = query(
           historyRef,
-          where('timestamp', '>=', twentyFourHoursAgo),
-          orderBy('timestamp', 'asc')
+          orderBy('timestamp', 'desc'),
+          limit(288)
         )
 
         unsubscribeFirestore = onSnapshot(q, (snapshot) => {
@@ -92,9 +91,14 @@ export function useThermostat() {
             return {
               time: date.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }),
               temperature: docData.temperature,
-              humidity: docData.humidity
+              humidity: docData.humidity,
+              rawTime: date.getTime()
             }
           })
+          
+          // Ordiniamo cronologicamente in senso crescente per la corretta visualizzazione nel grafico
+          histData.sort((a, b) => a.rawTime - b.rawTime)
+          
           setHistory(histData)
         }, err => {
           console.error("Errore fetch storico:", err)
