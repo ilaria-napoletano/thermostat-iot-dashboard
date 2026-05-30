@@ -357,13 +357,37 @@ export default function Settings() {
           <button 
             onClick={() => setShowInfo(!showInfo)}
             style={{ 
-              background: 'transparent', border: 'none', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              width: 32, height: 32, borderRadius: '50%'
+              background: showInfo ? 'rgba(2, 132, 199, 0.08)' : 'transparent', 
+              border: showInfo ? '1.5px solid #0284c7' : '1.5px solid #cbd5e1', 
+              borderRadius: '20px', 
+              padding: '4px 12px',
+              cursor: 'pointer',
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              color: showInfo ? '#0284c7' : '#94a3b8', 
+              fontWeight: 600, 
+              fontSize: 12,
+              fontFamily: 'inherit',
+              transition: 'all 0.2s',
+            }}
+            onMouseOver={(e) => {
+              if (!showInfo) {
+                e.currentTarget.style.background = 'rgba(2, 132, 199, 0.05)';
+                e.currentTarget.style.borderColor = '#0284c7';
+                e.currentTarget.style.color = '#0284c7';
+              }
+            }}
+            onMouseOut={(e) => {
+              if (!showInfo) {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.borderColor = '#cbd5e1';
+                e.currentTarget.style.color = '#94a3b8';
+              }
             }}
             title="Informazioni progetto"
           >
-            <div style={{ width: 22, height: 22, borderRadius: '50%', border: '2px solid #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontWeight: 'bold', fontSize: 12, fontStyle: 'italic', fontFamily: 'serif' }}>i</div>
+            Informazioni
           </button>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
