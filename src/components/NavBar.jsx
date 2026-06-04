@@ -5,6 +5,7 @@ const links = [
   { to: '/programmazione', label: 'Programma', icon: '⏱' },
   { to: '/history', label: 'Storico', icon: '📈' },
   { to: '/settings', label: 'Impostazioni', icon: '⚙' },
+  { to: '/notifiche', label: 'Notifiche', icon: '🔔' },
 ]
 
 export default function NavBar() {
