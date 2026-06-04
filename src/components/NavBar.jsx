@@ -164,11 +164,12 @@ export default function NavBar() {
               flexDirection: 'column',
               alignItems: 'center',
               gap: 4,
-              padding: '8px 16px',
+              padding: '8px 2px',
               textDecoration: 'none',
               color: isActive ? '#0284c7' : '#94a3b8',
               transition: 'color 0.2s',
               flex: 1,
+              minWidth: 0,
             })}
           >
             {({ isActive }) => (
