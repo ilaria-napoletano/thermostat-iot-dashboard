@@ -1,4 +1,7 @@
 import { NavLink } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { ref, onValue } from 'firebase/database'
+import { db } from '../firebase/config'
 
 const links = [
   { to: '/', label: 'Dashboard', icon: '🏠' },
@@ -9,6 +12,51 @@ const links = [
 ]
 
 export default function NavBar() {
+  const [activeAlertCount, setActiveAlertCount] = useState(0);
+
+  useEffect(() => {
+    const alertRef = ref(db, 'alert');
+    let interval;
+    
+    const unsubscribe = onValue(alertRef, (snapshot) => {
+      const data = snapshot.val();
+      if (!data) {
+        setActiveAlertCount(0);
+        return;
+      }
+      
+      const checkStaleness = () => {
+        const matlabDateStr = data.timestamp ? data.timestamp.replace(" ", "T") : null;
+        const matlabDate = matlabDateStr ? new Date(matlabDateStr) : null;
+        let isStale = false;
+        
+        if (matlabDate) {
+          const diffMs = new Date() - matlabDate;
+          if (diffMs > 120000) isStale = true;
+        } else {
+          isStale = true;
+        }
+        
+        if (isStale) {
+          setActiveAlertCount(0);
+        } else {
+          const keys = ['incendio', 'guasto_hardware', 'temp_alta', 'temp_bassa', 'co_alta', 'offline'];
+          const count = keys.reduce((acc, key) => acc + (data[key] === true ? 1 : 0), 0);
+          setActiveAlertCount(count);
+        }
+      };
+
+      checkStaleness();
+      clearInterval(interval);
+      interval = setInterval(checkStaleness, 10000);
+    });
+
+    return () => {
+      unsubscribe();
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
     <>
       {/* Desktop top navbar */}
@@ -66,9 +114,25 @@ export default function NavBar() {
                   transition: 'all 0.2s',
                   background: isActive ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
                   color: isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.7)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
                 })}
               >
                 {label}
+                {to === '/notifiche' && activeAlertCount > 0 && (
+                  <span style={{
+                    background: '#ef4444',
+                    color: '#fff',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    padding: '2px 6px',
+                    borderRadius: 12,
+                    lineHeight: 1
+                  }}>
+                    {activeAlertCount}
+                  </span>
+                )}
               </NavLink>
             ))}
           </nav>
@@ -109,7 +173,25 @@ export default function NavBar() {
           >
             {({ isActive }) => (
               <>
-                <span style={{ fontSize: 20, lineHeight: 1 }}>{icon}</span>
+                <div style={{ position: 'relative' }}>
+                  <span style={{ fontSize: 20, lineHeight: 1 }}>{icon}</span>
+                  {to === '/notifiche' && activeAlertCount > 0 && (
+                    <span style={{
+                      position: 'absolute',
+                      top: -4,
+                      right: -8,
+                      background: '#ef4444',
+                      color: '#fff',
+                      fontSize: 9,
+                      fontWeight: 700,
+                      padding: '2px 5px',
+                      borderRadius: 10,
+                      lineHeight: 1
+                    }}>
+                      {activeAlertCount}
+                    </span>
+                  )}
+                </div>
                 <span style={{
                   fontSize: 10, fontWeight: 600, letterSpacing: '0.04em',
                   color: isActive ? '#0284c7' : '#94a3b8',
