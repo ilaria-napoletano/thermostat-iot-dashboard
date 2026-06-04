@@ -179,7 +179,7 @@ export default function Notifiche() {
               <>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '8px 0' }}>
                   <div style={{ flex: 1, height: 1, background: 'rgba(0,0,0,0.1)' }}></div>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Alert recenti</span>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Notifiche recenti</span>
                   <div style={{ flex: 1, height: 1, background: 'rgba(0,0,0,0.1)' }}></div>
                 </div>
                 {activeAlerts.map(alertKey => (
