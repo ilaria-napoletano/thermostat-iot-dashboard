@@ -152,13 +152,11 @@ export default function Notifiche() {
   }
 
   const activeAlerts = [];
-  if (!isStale) {
-    Object.keys(ALERT_CONFIG).forEach(key => {
-      if (alertData[key] === true) {
-        activeAlerts.push(key);
-      }
-    });
-  }
+  Object.keys(ALERT_CONFIG).forEach(key => {
+    if (alertData[key] === true) {
+      activeAlerts.push(key);
+    }
+  });
 
   return (
     <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -171,11 +169,31 @@ export default function Notifiche() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {isStale ? (
-          <AlertCard 
-            config={STALE_CONFIG} 
-            message="Il server diagnostico non risponde. I dati mostrati potrebbero essere obsoleti." 
-            timestamp={alertData.timestamp}
-          />
+          <>
+            <AlertCard 
+              config={STALE_CONFIG} 
+              message="Il server diagnostico non risponde. I dati mostrati potrebbero essere obsoleti." 
+              timestamp={alertData.timestamp}
+            />
+            {activeAlerts.length > 0 && (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '8px 0' }}>
+                  <div style={{ flex: 1, height: 1, background: 'rgba(0,0,0,0.1)' }}></div>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Alert recenti</span>
+                  <div style={{ flex: 1, height: 1, background: 'rgba(0,0,0,0.1)' }}></div>
+                </div>
+                {activeAlerts.map(alertKey => (
+                  <div key={`stale-${alertKey}`} style={{ opacity: 0.8, filter: 'grayscale(20%)' }}>
+                    <AlertCard 
+                      config={ALERT_CONFIG[alertKey]} 
+                      message={alertData.messaggio || ALERT_CONFIG[alertKey].label} 
+                      timestamp={alertData.timestamp}
+                    />
+                  </div>
+                ))}
+              </>
+            )}
+          </>
         ) : activeAlerts.length > 0 ? (
           activeAlerts.map(alertKey => (
             <AlertCard 
