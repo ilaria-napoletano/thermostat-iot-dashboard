@@ -37,7 +37,7 @@ function Chart({ data, dataKey, label, color, unit }) {
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
-          <XAxis dataKey="time" tick={{ fill: '#475569', fontSize: 10 }} interval={5} stroke="transparent" />
+          <XAxis dataKey="time" tick={{ fill: '#475569', fontSize: 10 }} minTickGap={50} stroke="transparent" />
           <YAxis tick={{ fill: '#475569', fontSize: 10 }} stroke="transparent" domain={['auto', 'auto']} />
           <Tooltip content={<CustomTooltip unit={unit} color={color} />} />
           <Line
