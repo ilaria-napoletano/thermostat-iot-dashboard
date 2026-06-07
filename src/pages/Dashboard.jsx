@@ -198,10 +198,14 @@ export default function Dashboard() {
   const temp = data?.temperature ?? null
   const humidity = data?.humidity ?? null
   const target = data?.target ?? null
+  const co = data?.co ?? null
   const isHeating = data?.isHeating ?? false
   const currentMode = isHeating 
     ? { ...modeInfo.heating, label: 'Riscaldamento acceso' } 
     : { ...modeInfo.idle, label: 'Riscaldamento spento' }
+
+  const hasCoAlert = co === true || (typeof co === 'number' && co > 50)
+
   return (
     <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
@@ -212,6 +216,22 @@ export default function Dashboard() {
           fontSize: 13, textAlign: 'center',
         }}>
           Modalità demo — Firebase non connesso
+        </div>
+      )}
+
+      {hasCoAlert && (
+        <div className="animate-pulse" style={{
+          background: 'rgba(239, 68, 68, 0.15)',
+          border: '1px solid rgba(239, 68, 68, 0.35)',
+          borderRadius: 12,
+          padding: '12px 16px',
+          color: '#ef4444',
+          fontSize: 13,
+          fontWeight: 700,
+          textAlign: 'center',
+          boxShadow: '0 4px 12px rgba(239, 68, 68, 0.1)'
+        }}>
+          ⚠️ ATTENZIONE: Rilevati livelli anomali di Monossido di Carbonio!
         </div>
       )}
 
@@ -236,7 +256,13 @@ export default function Dashboard() {
       {/* Stats row */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         <StatCard label="Umidità interna" value={humidity !== null ? `${humidity}%` : '--'} sub="Umidità relativa in casa" icon="💧" accent="#0284c7" />
-        <StatCard label="Rilevazione CO" value="--" sub="Monossido di carbonio" icon="💨" accent="#ef4444" />
+        <StatCard 
+          label="Rilevazione CO" 
+          value={co === null ? '--' : (typeof co === 'boolean' ? (co ? 'ALLARME' : 'OK') : `${co} ppm`)} 
+          sub="Monossido di carbonio" 
+          icon="💨" 
+          accent={hasCoAlert ? '#ef4444' : '#10b981'} 
+        />
       </div>
 
       {/* Unified Meteo Card */}

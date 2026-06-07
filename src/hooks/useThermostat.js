@@ -55,6 +55,7 @@ export function useThermostat() {
               setData({
                 temperature: val.status?.temp ?? null,
                 humidity: val.status?.hum ?? null,
+                co: val.status?.CO ?? val.status?.co ?? null,
                 target: val.settings?.set_temp ?? val.setting?.set_temp ?? val.set_temp ?? null,
                 isteresi: val.settings?.isteresi ?? val.setting?.isteresi ?? val.isteresi ?? 0.2,
                 isOn: val.status?.wifi_ok ?? true,
