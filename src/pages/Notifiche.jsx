@@ -5,6 +5,7 @@ import { db } from '../firebase/config'
 const ALERT_CONFIG = {
   incendio: { color: '#ef4444', icon: '🔥', label: 'Allarme Incendio', bg: 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(255, 255, 255, 0.78))', glow: 'rgba(239, 68, 68, 0.25)' },
   guasto_hardware: { color: '#f97316', icon: '🔧', label: 'Guasto Sensori', bg: 'linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(255, 255, 255, 0.78))', glow: 'rgba(249, 115, 22, 0.25)' },
+  guasto_stallo: { color: '#ef4444', icon: '🛑', label: 'Blocco Lettura Hardware', desc: 'Rilevato blocco lettura hardware dopo 20 letture identiche.', bg: 'linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(255, 255, 255, 0.78))', glow: 'rgba(239, 68, 68, 0.25)' },
   temp_alta: { color: '#ea580c', icon: '🥵', label: 'Temperatura Alta', bg: 'linear-gradient(135deg, rgba(234, 88, 12, 0.15), rgba(255, 255, 255, 0.78))', glow: 'rgba(234, 88, 12, 0.25)' },
   temp_bassa: { color: '#0ea5e9', icon: '🥶', label: 'Temperatura Bassa', bg: 'linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(255, 255, 255, 0.78))', glow: 'rgba(14, 165, 233, 0.25)' },
   co_alta: { color: '#8b5cf6', icon: '💨', label: 'Livelli CO Anomali', bg: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(255, 255, 255, 0.78))', glow: 'rgba(139, 92, 246, 0.25)' },
@@ -186,7 +187,7 @@ export default function Notifiche() {
                   <div key={`stale-${alertKey}`} style={{ opacity: 0.8, filter: 'grayscale(20%)' }}>
                     <AlertCard 
                       config={ALERT_CONFIG[alertKey]} 
-                      message={alertData.messaggio || ALERT_CONFIG[alertKey].label} 
+                      message={alertData.messaggio || ALERT_CONFIG[alertKey].desc || ALERT_CONFIG[alertKey].label} 
                       timestamp={alertData.timestamp}
                     />
                   </div>
@@ -199,7 +200,7 @@ export default function Notifiche() {
             <AlertCard 
               key={alertKey}
               config={ALERT_CONFIG[alertKey]} 
-              message={alertData.messaggio || ALERT_CONFIG[alertKey].label} 
+              message={alertData.messaggio || ALERT_CONFIG[alertKey].desc || ALERT_CONFIG[alertKey].label} 
               timestamp={alertData.timestamp}
             />
           ))

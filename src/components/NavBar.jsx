@@ -40,7 +40,7 @@ export default function NavBar() {
         if (isStale) {
           setActiveAlertCount(0);
         } else {
-          const keys = ['incendio', 'guasto_hardware', 'temp_alta', 'temp_bassa', 'co_alta', 'offline'];
+          const keys = ['incendio', 'guasto_hardware', 'guasto_stallo', 'temp_alta', 'temp_bassa', 'co_alta', 'offline'];
           const count = keys.reduce((acc, key) => acc + (data[key] === true ? 1 : 0), 0);
           setActiveAlertCount(count);
         }
