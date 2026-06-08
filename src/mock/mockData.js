@@ -9,15 +9,21 @@ export const mockThermostatData = {
   lastUpdated: Date.now(),
 }
 
-export function generateHistoryMock(hours = 24) {
+export function generateHistoryMock(hours = 48) {
   const now = Date.now()
   return Array.from({ length: hours }, (_, i) => {
     const rawTime = now - (hours - i) * 3600000
+    const d = new Date(rawTime)
     return {
       rawTime,
-      time: new Date(rawTime).toLocaleTimeString('it-IT', {
+      time: d.toLocaleTimeString('it-IT', {
         hour: '2-digit',
         minute: '2-digit',
+      }),
+      date: d.toLocaleDateString('it-IT', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
       }),
       temperature: +(19 + Math.random() * 5).toFixed(1),
       humidity: Math.round(45 + Math.random() * 20),

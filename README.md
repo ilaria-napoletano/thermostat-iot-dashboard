@@ -56,7 +56,7 @@ Apri il browser su: **http://localhost:5173**
 | Pagina | Descrizione |
 |---|---|
 | **Dashboard** | Temperatura e umidità in tempo reale |
-| **Storico** | Grafici delle ultime 24 ore |
+| **Storico** | Grafici delle ultime 48 ore |
 | **Programmazione** | Gestione della modalità (Acceso, Spento, Programmato), impostazione degli orari tramite innovativi slider circolari e selezione di routine climatiche preimpostate (Feriali, Festivo, ECO, Vacanza) con dettagli descrittivi a comparsa |
 | **Impostazioni** | Temperatura target, isteresi, preferenze utente, dettagli sul Team di Sviluppo con logo ingrandito e pop-up informativo di presentazione del progetto |
 ---

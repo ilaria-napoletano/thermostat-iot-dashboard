@@ -14,7 +14,7 @@ async function getDb() {
 
 export function useThermostat() {
   const [data, setData] = useState(null)
-  const [history, setHistory] = useState(() => USE_MOCK ? generateHistoryMock(24) : [])
+  const [history, setHistory] = useState(() => USE_MOCK ? generateHistoryMock(48) : [])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -77,26 +77,32 @@ export function useThermostat() {
           }
         )
 
-        // 2. Lettura dati storici (Firestore) - Ultimi 288 record (pari a 24 ore se campionati ogni 5 min)
+        // 2. Lettura dati storici (Firestore) - Dati delle ultime 48 ore
         const historyRef = collection(firestoreDb, 'storico_termostato')
+        const fortyEightHoursAgo = new Date(Date.now() - 48 * 60 * 60 * 1000)
         const q = query(
           historyRef,
-          orderBy('timestamp', 'desc'),
-          limit(288)
+          where('timestamp', '>=', Timestamp.fromDate(fortyEightHoursAgo)),
+          orderBy('timestamp', 'desc')
         )
 
         unsubscribeFirestore = onSnapshot(q, (snapshot) => {
-          const histData = snapshot.docs.map(doc => {
-            const docData = doc.data()
-            const date = docData.timestamp?.toDate() || new Date()
-            return {
-              time: date.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }),
-              date: date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' }),
-              temperature: docData.temperature,
-              humidity: docData.humidity,
-              rawTime: date.getTime()
-            }
-          })
+          const now = Date.now()
+          const fortyEightHoursAgoLimit = now - 48 * 60 * 60 * 1000
+          
+          const histData = snapshot.docs
+            .map(doc => {
+              const docData = doc.data()
+              const date = docData.timestamp?.toDate() || new Date()
+              return {
+                time: date.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }),
+                date: date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+                temperature: docData.temperature,
+                humidity: docData.humidity,
+                rawTime: date.getTime()
+              }
+            })
+            .filter(item => item.rawTime >= fortyEightHoursAgoLimit)
           
           // Ordiniamo cronologicamente in senso crescente per la corretta visualizzazione nel grafico
           histData.sort((a, b) => a.rawTime - b.rawTime)
