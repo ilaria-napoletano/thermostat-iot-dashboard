@@ -1,15 +1,17 @@
-import admin from 'firebase-admin';
+import { initializeApp, cert } from 'firebase-admin/app';
+import { getDatabase } from 'firebase-admin/database';
+import { getFirestore, Timestamp, FieldValue } from 'firebase-admin/firestore';
 
 // Parse the service account JSON injected by GitHub Actions
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+initializeApp({
+  credential: cert(serviceAccount),
   databaseURL: process.env.FIREBASE_DATABASE_URL
 });
 
-const rtdb = admin.database();
-const firestore = admin.firestore();
+const rtdb = getDatabase();
+const firestore = getFirestore();
 
 async function syncData() {
   try {
@@ -32,8 +34,8 @@ async function syncData() {
     const telemetryData = {
       temperature: temp,
       humidity: hum,
-      timestamp: admin.firestore.Timestamp.fromMillis(validTimestamp),
-      syncedAt: admin.firestore.FieldValue.serverTimestamp()
+      timestamp: Timestamp.fromMillis(validTimestamp),
+      syncedAt: FieldValue.serverTimestamp()
     };
 
     console.log('Data to sync:', { temperature: temp, humidity: hum });
