@@ -1,3 +1,4 @@
+import { db, firestoreDb } from '../firebase/config';
 import { useState, useRef, useEffect } from 'react'
 import { useThermostat } from '../hooks/useThermostat'
 import { useAuth } from '../hooks/useAuth'
@@ -65,7 +66,7 @@ export default function Programmazione() {
     if (!currentUser || isMock) return;
     try {
       const { ref, update } = await import('firebase/database');
-      const { db } = await import('../firebase/config');
+      
       const targetRef = ref(db, 'termostato/settings/prog');
       if (type === 'on') {
         await update(targetRef, { h1: h, m1: m });
@@ -85,7 +86,7 @@ export default function Programmazione() {
     }
     try {
       const { ref, update } = await import('firebase/database');
-      const { db } = await import('../firebase/config');
+      
       await update(ref(db, 'termostato/settings'), { mode: newMode });
     } catch (err) {
       console.error('Errore cambio modalità:', err);
@@ -100,7 +101,7 @@ export default function Programmazione() {
     }
     try {
       const { ref, update } = await import('firebase/database');
-      const { db } = await import('../firebase/config');
+      
       const updates = {
         'termostato/settings/prog/h1': routine.onTime.h,
         'termostato/settings/prog/m1': routine.onTime.m,

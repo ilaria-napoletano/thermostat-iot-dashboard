@@ -1,3 +1,4 @@
+import { db, firestoreDb } from '../firebase/config';
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useThermostat } from '../hooks/useThermostat'
 import { useMeteo } from '../hooks/useMeteo'
@@ -162,7 +163,7 @@ export default function Dashboard() {
     if (isMock) return;
     try {
       const { ref, update } = await import('firebase/database');
-      const { db } = await import('../firebase/config');
+      
       const targetRef = ref(db, 'termostato/settings');
       await update(targetRef, { set_temp: newTarget });
     } catch (err) {

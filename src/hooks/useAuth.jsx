@@ -1,14 +1,9 @@
+import { db, firestoreDb } from '../firebase/config';
 import { createContext, useContext, useState, useEffect } from 'react';
 
 const USE_MOCK = !import.meta.env.VITE_FIREBASE_API_KEY;
 
-let firestoreInstance = null;
-async function getFirestoreDb() {
-  if (firestoreInstance) return firestoreInstance;
-  const { firestoreDb } = await import('../firebase/config');
-  firestoreInstance = firestoreDb;
-  return firestoreInstance;
-}
+
 
 const AuthContext = createContext();
 
@@ -40,7 +35,7 @@ export function AuthProvider({ children }) {
     }
 
     const { doc, getDoc } = await import('firebase/firestore');
-    const db = await getFirestoreDb();
+    const db = firestoreDb;
     
     // Controlliamo il documento con ID = username nella collezione users
     const docRef = doc(db, 'users', username);
@@ -79,7 +74,7 @@ export function AuthProvider({ children }) {
 
     if (!USE_MOCK) {
       const { doc, setDoc } = await import('firebase/firestore');
-      const db = await getFirestoreDb();
+      const db = firestoreDb;
       const docRef = doc(db, 'users', currentUser.username);
       await setDoc(docRef, updates, { merge: true });
     }

@@ -1,3 +1,4 @@
+import { db, firestoreDb } from '../firebase/config';
 import { useState, useEffect } from 'react'
 import { useThermostat } from '../hooks/useThermostat'
 import { useAuth } from '../hooks/useAuth'
@@ -76,7 +77,7 @@ export default function Settings() {
     if (isMock) return;
     try {
       const { ref, update } = await import('firebase/database');
-      const { db } = await import('../firebase/config');
+      
       const targetRef = ref(db, 'termostato/settings');
       await update(targetRef, { isteresi: newVal });
     } catch (err) {
@@ -252,7 +253,7 @@ export default function Settings() {
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
               <button 
                 onClick={handleSaveSettings}
-                disabled={isMock && false || isSaving || !userName.trim()}
+                disabled={isSaving || !userName.trim()}
                 style={{
                   padding: '10px 24px', borderRadius: 10, background: '#0284c7', color: 'white',
                   border: 'none', fontWeight: 600, fontSize: 14, cursor: (isSaving || !userName.trim()) ? 'not-allowed' : 'pointer',

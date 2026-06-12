@@ -11,10 +11,13 @@ const links = [
   { to: '/settings', label: 'Impostazioni', icon: '⚙' },
 ]
 
+const USE_MOCK = !import.meta.env.VITE_FIREBASE_API_KEY;
+
 export default function NavBar() {
   const [activeAlertCount, setActiveAlertCount] = useState(0);
 
   useEffect(() => {
+    if (USE_MOCK) return;
     const alertRef = ref(db, 'alert');
     let interval;
     

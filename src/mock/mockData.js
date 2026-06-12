@@ -4,7 +4,7 @@ export const mockThermostatData = {
   humidity: 58,
   co: 0, // Livello di CO (0 ppm o boolean false)
   target: 21.0,
-  mode: 'heating', // 'heating' | 'cooling' | 'idle'
+  isHeating: true,
   isOn: true,
   lastUpdated: Date.now(),
 }

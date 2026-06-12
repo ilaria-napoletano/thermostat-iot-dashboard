@@ -1,16 +1,10 @@
 import { useState, useEffect } from 'react'
 import { mockThermostatData, generateHistoryMock } from '../mock/mockData'
+import { ref, onValue } from 'firebase/database'
+import { collection, query, where, orderBy, onSnapshot, Timestamp } from 'firebase/firestore'
+import { db, firestoreDb } from '../firebase/config'
 
 const USE_MOCK = !import.meta.env.VITE_FIREBASE_API_KEY
-
-let firebaseDb = null
-
-async function getDb() {
-  if (firebaseDb) return firebaseDb
-  const { db } = await import('../firebase/config')
-  firebaseDb = db
-  return firebaseDb
-}
 
 export function useThermostat() {
   const [data, setData] = useState(null)
@@ -39,11 +33,6 @@ export function useThermostat() {
 
     async function connect() {
       try {
-        const { ref, onValue } = await import('firebase/database')
-        const { collection, query, where, orderBy, limit, onSnapshot, Timestamp } = await import('firebase/firestore')
-        const db = await getDb()
-        const { firestoreDb } = await import('../firebase/config')
-        
         // 1. Lettura dati real-time (RTDB)
         const thermostatRef = ref(db, 'termostato')
         unsubscribeRtdb = onValue(
@@ -59,7 +48,6 @@ export function useThermostat() {
                 target: val.settings?.set_temp ?? val.setting?.set_temp ?? val.set_temp ?? null,
                 isteresi: val.settings?.isteresi ?? val.setting?.isteresi ?? val.isteresi ?? 0.2,
                 isOn: val.status?.wifi_ok ?? true,
-                mode: val.status?.uscita === 1 ? 'heating' : 'idle',
                 isHeating: val.status?.output === true || val.status?.output === 1,
                 systemMode: val.settings?.mode ?? val.setting?.mode ?? val.mode ?? 2,
                 lastUpdated: val.status?.time ?? Date.now(),
